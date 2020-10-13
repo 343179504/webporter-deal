@@ -7,8 +7,8 @@ package com.suarez.webporter.util;
 public class Util {
     public static void main(String[] args) {
         //要比较的两个字符串
-        String str1 = "几句话米aaaaaa";
-        String str2 = "AC米兰aaaaaaa";
+        String str1 = "爱沙尼亚21岁以下_塞尔维亚21岁以下";
+        String str2 = "爱沙尼亚U21_塞尔维亚U21";
         levenshtein(str1.toLowerCase(),str2.toLowerCase());
     }
 
