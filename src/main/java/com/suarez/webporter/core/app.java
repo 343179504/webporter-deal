@@ -41,10 +41,10 @@ public class app implements ApplicationListener<ContextRefreshedEvent> {
                     }
 
                 }
-                if(maxSimilarity>0.6){
-                    WebPhaser.WebporterDeal(redisUtil.get(tmp_keyName),redisUtil.get(betkey));
+                if(maxSimilarity>0.4){
+                    WebPhaser.WebporterDeal(redisUtil.get(betkey),redisUtil.get(tmp_keyName));
                 }else{
-                    System.out.println(betkey+"未找到匹配的赛事....");
+                    //System.out.println(betkey+"未找到匹配的赛事....");
                 }
 
             }
