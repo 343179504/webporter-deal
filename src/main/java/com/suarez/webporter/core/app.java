@@ -7,6 +7,7 @@ import com.suarez.webporter.domain.DataInfo;
 import com.suarez.webporter.domain.Source;
 import com.suarez.webporter.domain.TeamInfo;
 import com.suarez.webporter.util.RedisUtil;
+import com.suarez.webporter.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -27,45 +28,27 @@ public class app implements ApplicationListener<ContextRefreshedEvent> {
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         while (true){
-            Set<String> keys = redisUtil.keys();
-            for (String key : keys) {
-                String val = redisUtil.get(key);
-                WebPhaser.WebporterDeal(val);
-                //TODO 测试速度
-//                Gson gson = new Gson();
-//                TeamInfo teamInfo = gson.fromJson(val, TeamInfo.class);
-//                String keyName = teamInfo.getKeyName();
-//                List<Source> sourceList = teamInfo.getSource();
-//                Source wbSource = null;
-//                label:
-//                for (Source source : sourceList) {
-//                    switch (source.getName()) {
-//                        case "bet":
-//                            wbSource = source;
-//                            break;
-//                        default:
-//                            break label;
-//                    }
-//                }
-//
-//                List<DataInfo> infoList = wbSource.getInfo();
-//                for (DataInfo dataInfo : infoList) {
-//                    DataInfo old_info = map.get(key + dataInfo.getPoint());
-//                    if (old_info == null) {
-//                        map.put(key + dataInfo.getPoint(), dataInfo);
-//                    } else {
-//                        if (!dataInfo.getBig_pl().equals(old_info.getBig_pl())) {
-//                            //TODO 大球变化
-//                            System.out.println("team:"+key+" 盘口:" + dataInfo.getPoint() + " 大球:" +dataInfo.getBig_pl());
-//                        }
-//                        if (!dataInfo.getSm_pl().equals(old_info.getSm_pl())) {
-//                            //TODO 小球变化
-//                            System.out.println("team:"+key+" 盘口:" + dataInfo.getPoint() + " 小球:" +dataInfo.getSm_pl());
-//                        }
-//                        map.put(key + dataInfo.getPoint(), dataInfo);
-//                    }
-//                }
+            Set<String> Wbkeys = redisUtil.keysByPre("wb");
+            Set<String> Betkeys = redisUtil.keysByPre("bet");
+            for (String betkey : Betkeys) {
+                float maxSimilarity=0;
+                String tmp_keyName= "";
+                for (String wbkey : Wbkeys) {
+                    float tmp = Util.levenshtein(wbkey,betkey);
+                    if(tmp>maxSimilarity){
+                        maxSimilarity=tmp;
+                        tmp_keyName=wbkey;
+                    }
+
+                }
+                if(maxSimilarity>0.6){
+                    WebPhaser.WebporterDeal(redisUtil.get(tmp_keyName),redisUtil.get(betkey));
+                }else{
+                    System.out.println(betkey+"未找到匹配的赛事....");
+                }
+
             }
+
         }
     }
 }

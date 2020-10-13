@@ -1,11 +1,13 @@
 package com.suarez.webporter.deal;
 
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.suarez.webporter.domain.DataInfo;
 import com.suarez.webporter.domain.Source;
 import com.suarez.webporter.domain.TeamInfo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by feng on 2020/10/11.
@@ -62,52 +64,41 @@ public class WebPhaser {
         }
     }
 
-    public static void WebporterDeal(String dataStr) {
+    public static void WebporterDeal(String dataStrPrimary, String dataStrCustom) {
         Gson gson = new Gson();
-        TeamInfo teamInfo = gson.fromJson(dataStr, TeamInfo.class);
-        String key = teamInfo.getKeyName();
-        List<Source> sourceList = teamInfo.getSource();
-        Source wbSource = null;
-        Source betSource = null;
-        label:
-        for (Source source : sourceList) {
-            switch (source.getName()) {
-                case "wb":
-                    wbSource = source;
-                    break;
-                case "bet":
-                    betSource = source;
-                    break;
-                default:
-                    break label;
-            }
+        TeamInfo teamInfoPrimary = gson.fromJson(dataStrPrimary, TeamInfo.class);
+        String keyPrimary = teamInfoPrimary.getKeyName();
+        List<DataInfo> infoListPrimary = teamInfoPrimary.getInfo();
+
+        TeamInfo teamInfoCustom = gson.fromJson(dataStrCustom, TeamInfo.class);
+        String keyCustom = teamInfoCustom.getKeyName();
+        List<DataInfo> infoListCustom = teamInfoCustom.getInfo();
+
+        Map<String, DataInfo> mapPrimary = Maps.newHashMap();
+        for (DataInfo dataInfo : infoListPrimary) {
+            String key = dataInfo.getPoint();
+            mapPrimary.put(key, dataInfo);
         }
+        for (DataInfo dataInfo : infoListCustom) {
+            String point = dataInfo.getPoint();
+            DataInfo dataInfoPrimary = mapPrimary.get(point);
+            if (dataInfoPrimary != null) {
+                ResultInfo resultInfo_big = WebPhaser.webpoterPhase(2500, keyPrimary,
+                        Double.valueOf(dataInfoPrimary.getBig_pl()),
+                        Double.valueOf(dataInfo.getSm_pl()), point);
+                //TODO 推送消息
+                WebPhaser.printResultInfo(resultInfo_big);
 
-        if (wbSource != null && betSource != null) {
-            List<DataInfo> bet_dataInfoList = betSource.getInfo();
-            List<DataInfo> wb_dataInfoList = wbSource.getInfo();
-            for (DataInfo bet_dataInfo : bet_dataInfoList) {
-                String point = bet_dataInfo.getPoint();
-                for (DataInfo wb_dataInfo : wb_dataInfoList) {
-                    if (wb_dataInfo.getPoint().equals(point)) {
-                        //bet 大 wb 小
-                        ResultInfo resultInfo_big = WebPhaser.webpoterPhase(2500, key,
-                                Double.valueOf(bet_dataInfo.getBig_pl()),
-                                Double.valueOf(wb_dataInfo.getSm_pl()), point);
-                        //TODO 推送消息
-                        WebPhaser.printResultInfo(resultInfo_big);
-
-                        //bet-小 wb-大
-                        ResultInfo resultInfo_sm = WebPhaser.webpoterPhase(2500, key,
-                                Double.valueOf(bet_dataInfo.getSm_pl()),
-                                Double.valueOf(wb_dataInfo.getBig_pl()), point);
-                        //TODO 推送消息
-                        WebPhaser.printResultInfo(resultInfo_sm);
-                    }
-                }
+                //bet-小 wb-大
+                ResultInfo resultInfo_sm = WebPhaser.webpoterPhase(2500, keyCustom,
+                        Double.valueOf(dataInfoPrimary.getSm_pl()),
+                        Double.valueOf(dataInfo.getBig_pl()), point);
+                //TODO 推送消息
+                WebPhaser.printResultInfo(resultInfo_sm);
             }
         }
     }
+
 
     public static void main(String[] args) {
         ResultInfo resultInfo = webpoterPhase(2500, "test", 1.05, 1.06, "0.5");

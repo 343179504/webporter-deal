@@ -11,5 +11,5 @@ import java.util.List;
 public class TeamInfo {
     private String keyName;
     private String teamText;
-    private List<Source> source;
+    private List<DataInfo> info;
 }

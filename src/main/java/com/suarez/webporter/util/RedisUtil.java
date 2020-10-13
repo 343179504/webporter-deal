@@ -31,4 +31,10 @@ public class RedisUtil {
     public Set<String> keys () {
         return redisTemplate.keys("*");
     }
+    public Set<String> keysByPre (String pre) {
+        if (StringUtils.isEmpty(pre)) {
+            return null;
+        }
+        return redisTemplate.keys(pre+"*");
+    }
 }
