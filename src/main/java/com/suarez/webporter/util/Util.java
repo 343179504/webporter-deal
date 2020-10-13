@@ -7,8 +7,8 @@ package com.suarez.webporter.util;
 public class Util {
     public static void main(String[] args) {
         //要比较的两个字符串
-        String str1 = "几句话米aaaaaa";
-        String str2 = "AC米兰aaaaaaa";
+        String str1 = "爱沙尼亚21岁以下_塞尔维亚21岁以下";
+        String str2 = "爱沙尼亚U21_塞尔维亚U21";
         levenshtein(str1.toLowerCase(),str2.toLowerCase());
     }
 
@@ -44,11 +44,11 @@ public class Util {
                         dif[i - 1][j] + 1);
             }
         }
-        System.out.println("字符串\""+str1+"\"与\""+str2+"\"的比较");
+        //System.out.println("字符串\""+str1+"\"与\""+str2+"\"的比较");
         //取数组右下角的值，同样不同位置代表不同字符串的比较
         //计算相似度
         float similarity =1 - (float) dif[len1][len2] / Math.max(str1.length(), str2.length());
-        System.out.println("相识度："+similarity);
+        //System.out.println("相识度："+similarity);
 
         return similarity;
     }

@@ -50,7 +50,7 @@ public class WebPhaser {
     }
 
     public static void printResultInfo(ResultInfo resultInfo) {
-        System.out.println("是否满足收益条件:" + resultInfo.getIsTrue());
+        //System.out.println("是否满足收益条件:" + resultInfo.getIsTrue());
         if (resultInfo.getIsTrue()) {
             String rsStr = "场次:" + resultInfo.getTeam() + "盘口:" + resultInfo.getPk() +
                     "大球赔率:" + resultInfo.getBig_pl() + "大球金额:" + resultInfo.getBig_money() +
@@ -60,7 +60,7 @@ public class WebPhaser {
         } else {
             String rsStr = "场次:" + resultInfo.getTeam() + "盘口:" + resultInfo.getPk() +
                     "大球赔率:" + resultInfo.getBig_pl() + "小球赔率:" + resultInfo.getSm_pl();
-            System.out.println(rsStr);
+            //System.out.println(rsStr);
         }
     }
 
@@ -89,6 +89,7 @@ public class WebPhaser {
                 //TODO 推送消息
                 WebPhaser.printResultInfo(resultInfo_big);
 
+
                 //bet-小 wb-大
                 ResultInfo resultInfo_sm = WebPhaser.webpoterPhase(2500, keyCustom,
                         Double.valueOf(dataInfoPrimary.getSm_pl()),
@@ -101,7 +102,7 @@ public class WebPhaser {
 
 
     public static void main(String[] args) {
-        ResultInfo resultInfo = webpoterPhase(2500, "test", 1.05, 1.06, "0.5");
+        ResultInfo resultInfo = webpoterPhase(2000, "test", 1.05, 1.06, "0.5");
         System.out.println("是否满足收益条件:" + resultInfo.getIsTrue());
         if (resultInfo.getIsTrue()) {
             String rsStr = "场次:" + resultInfo.getTeam() + "盘口:" + resultInfo.getPk() +
