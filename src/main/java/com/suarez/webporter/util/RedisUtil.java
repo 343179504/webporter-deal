@@ -1,20 +1,34 @@
 package com.suarez.webporter.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
+import java.util.Set;
 
 @Component
 public class RedisUtil {
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    @Resource
+    RedisTemplate<String, String> redisTemplate;
 
-    public void putDataToRedis(String key,Object object){
-        redisTemplate.opsForValue().set(key, object);
+
+
+
+    public String get(String key) {
+        if (StringUtils.isEmpty(key)) {
+            return null;
+        }
+        return redisTemplate.opsForValue().get(key);
     }
 
-    public Object putDataToRedis(String key){
-        return redisTemplate.opsForValue().get(key);
+    public void set(String key, String value) {
+        if (StringUtils.isEmpty(key) || StringUtils.isEmpty(value)) {
+            return;
+        }
+        redisTemplate.opsForValue().set(key, value);
+    }
+    public Set<String> keys () {
+        return redisTemplate.keys("*");
     }
 }
