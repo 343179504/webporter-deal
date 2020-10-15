@@ -44,6 +44,7 @@ public class BetWbDeal implements Runnable {
                     } else {
                         //System.out.println(betkey+"未找到匹配的赛事....");
                     }
+                    //redisUtil.removeKey(betkey);
                 }
 
             } catch (Exception e) {
