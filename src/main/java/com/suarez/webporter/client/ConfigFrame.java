@@ -12,10 +12,10 @@ public class ConfigFrame {
 
         JPanel panel = new JPanel();
         panel.setLayout(null);
-        panel = new ConfigDB().buildJpanel(panel);
-        panel = new ConfigSocket().buildJpanel(panel);
-        panel = new ConfigEvent().buildJpanel(panel);
-        panel = new ConfigTask().buildJpanel(panel);
+//        panel = new ConfigDB().buildJpanel(panel);
+//        panel = new ConfigSocket().buildJpanel(panel);
+//        panel = new ConfigEvent().buildJpanel(panel);
+//        panel = new ConfigTask().buildJpanel(panel);
         panel = new ConfigPrint().buildJpanel(panel);
         buildFrame(panel);
     }
@@ -68,7 +68,7 @@ public class ConfigFrame {
         frame.getContentPane().setLayout(null);
         frame.getContentPane().add(BorderLayout.CENTER, component);
         // 设置窗口最小尺寸
-        frame.setMinimumSize(new Dimension(800, 600));
+        frame.setMinimumSize(new Dimension(1152, 864));
 
         frame.pack();
         frame.setLocationRelativeTo(null);
