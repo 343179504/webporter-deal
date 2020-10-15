@@ -8,7 +8,7 @@ import org.springframework.context.annotation.PropertySource;
  **/
 @Configuration
 @ConfigurationProperties(prefix = "constant")
-@PropertySource(value = "classpath:constant.properties")
+@PropertySource(value = "classpath:application.properties")
 public class Constant {
 
     private boolean taskEnable;

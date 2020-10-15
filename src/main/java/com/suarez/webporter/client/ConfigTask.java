@@ -19,10 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @Classname ConfigTask
@@ -45,13 +42,15 @@ public class ConfigTask {
     private static String choseTask = null;
 
     private AppContextUtil appContextUtil = new AppContextUtil();
-    private TaskService taskService = appContextUtil.getContext().getBean(TaskService.class);
+    //private TaskService taskService = appContextUtil.getContext().getBean(TaskService.class);
 
     public JPanel buildJpanel(JPanel panel) {
         ConfigFrame cf = new ConfigFrame();
 
         int y0 = 550;
-        List<TaskInfoBean> tasks = taskService.getAllTaskInfo();
+        List<String> tasks = new ArrayList<>();
+        tasks.add("111");
+        tasks.add("222");
 
         panel.add(cf.buildJBorder("任务配置", 5, y0, 490, 180));
         panel.add(cf.buildJLabel("选择任务：", 15, y0 + 30, 80, 25));
@@ -103,15 +102,15 @@ public class ConfigTask {
 
     }
 
-    private static JComboBox buildJComboBox(List<TaskInfoBean> elements, int x, int y, int width, int height) {
+    private static JComboBox buildJComboBox(List<String> elements, int x, int y, int width, int height) {
 
         DefaultComboBoxModel codeTypeModel = new DefaultComboBoxModel();
         // elements 下拉框中的选项
         codeTypeModel.addElement(defaultTest);
-        for (int i = 0; i < elements.size(); i++) {
-            TaskInfoBean taskInfo = elements.get(i);
-            String taskName = taskInfo.getTaskName();
-            codeTypeModel.addElement(taskName);
+        for (String element : elements) {
+            //TaskInfoBean taskInfo = elements.get(i);
+            //String taskName = taskInfo.getTaskName();
+            codeTypeModel.addElement(element);
         }
 
         JComboBox codeTypeBox = new JComboBox(codeTypeModel);
@@ -127,8 +126,8 @@ public class ConfigTask {
         } else {
             propertiesUtil.setConTaskEnable(true);
 
-            TaskManager taskManager = new TaskManager();
-            taskManager.init(choseTask);
+            //TaskManager taskManager = new TaskManager();
+            //taskManager.init(choseTask);
             reportStart.setEnabled(false);
             reportEnd.setEnabled(true);
             logger.info("客户端连接成功，上报开始");

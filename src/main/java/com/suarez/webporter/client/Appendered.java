@@ -1,5 +1,8 @@
 package com.suarez.webporter.client;
 
+import com.suarez.webporter.core.app;
+import com.suarez.webporter.util.SpringBeanUtil;
+
 import javax.swing.*;
 import java.io.PipedReader;
 import java.util.Scanner;
@@ -25,5 +28,8 @@ public class Appendered extends Thread {
             //使垂直滚动条自动向下滚动
             scroll.getVerticalScrollBar().setValue(scroll.getVerticalScrollBar().getMaximum());
         }
+
+        app app = (com.suarez.webporter.core.app) SpringBeanUtil.getBean("app");
+        app.begin();
     }
 }

@@ -68,7 +68,7 @@ public class ConfigFrame {
         frame.getContentPane().setLayout(null);
         frame.getContentPane().add(BorderLayout.CENTER, component);
         // 设置窗口最小尺寸
-        frame.setMinimumSize(new Dimension(1152, 864));
+        frame.setMinimumSize(new Dimension(800, 600));
 
         frame.pack();
         frame.setLocationRelativeTo(null);
