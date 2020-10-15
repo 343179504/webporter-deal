@@ -37,4 +37,11 @@ public class RedisUtil {
         }
         return redisTemplate.keys(pre+"*");
     }
+
+    public void removeKey(String key) {
+        if (!StringUtils.isEmpty(key)) {
+            redisTemplate.delete(key);
+        }
+    }
+
 }
