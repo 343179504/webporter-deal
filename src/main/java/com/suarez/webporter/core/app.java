@@ -28,24 +28,29 @@ public class app implements ApplicationListener<ContextRefreshedEvent> {
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         while (true){
-            Set<String> Wbkeys = redisUtil.keysByPre("wb");
-            Set<String> Betkeys = redisUtil.keysByPre("bet");
-            for (String betkey : Betkeys) {
-                float maxSimilarity=0;
-                String tmp_keyName= "";
-                for (String wbkey : Wbkeys) {
-                    float tmp = Util.levenshtein(wbkey,betkey);
-                    if(tmp>maxSimilarity){
-                        maxSimilarity=tmp;
-                        tmp_keyName=wbkey;
+            try {
+                Set<String> Wbkeys = redisUtil.keysByPre("wb");
+                Set<String> Betkeys = redisUtil.keysByPre("bet");
+                for (String betkey : Betkeys) {
+                    float maxSimilarity=0;
+                    String tmp_keyName= "";
+                    for (String wbkey : Wbkeys) {
+                        float tmp = Util.levenshtein(wbkey,betkey);
+                        if(tmp>maxSimilarity){
+                            maxSimilarity=tmp;
+                            tmp_keyName=wbkey;
+                        }
+
+                    }
+                    if(maxSimilarity>0.4){
+                        WebPhaser.WebporterDeal(redisUtil.get(betkey),redisUtil.get(tmp_keyName));
+                    }else{
+                        //System.out.println(betkey+"未找到匹配的赛事....");
                     }
 
                 }
-                if(maxSimilarity>0.4){
-                    WebPhaser.WebporterDeal(redisUtil.get(betkey),redisUtil.get(tmp_keyName));
-                }else{
-                    //System.out.println(betkey+"未找到匹配的赛事....");
-                }
+
+            }catch(Exception e){
 
             }
 

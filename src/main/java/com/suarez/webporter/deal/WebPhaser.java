@@ -52,11 +52,11 @@ public class WebPhaser {
     public static void printResultInfo(ResultInfo resultInfo, String big_ly,String sm_ly) {
         //System.out.println("是否满足收益条件:" + resultInfo.getIsTrue());
         if (resultInfo.getIsTrue()) {
-            String rsStr = "场次:" + resultInfo.getTeam() + "盘口:" + resultInfo.getPk() + "(" +
-                    big_ly + ")大球赔率:" + resultInfo.getBig_pl() + "大球金额:" + resultInfo.getBig_money() + "(" +
-                    sm_ly + ")小球赔率:" + resultInfo.getSm_pl() + "小球金额:" + resultInfo.getSm_money() +
-                    "盈利金额:" + resultInfo.getEnrn_money();
+            String rsStr = big_ly+"  场次: " + resultInfo.getTeam() + " 盘口:" + resultInfo.getPk() +"大球赔率:" + resultInfo.getBig_pl() + " 大球金额:【" + resultInfo.getBig_money() + "】-----   " +
+                    sm_ly + " 小球赔率:" + resultInfo.getSm_pl() + "小球金额:【" + resultInfo.getSm_money() +
+                    "】 盈利金额:【" + resultInfo.getEnrn_money()+"】";
             System.out.println(rsStr);
+
         } else {
             String rsStr = "场次:" + resultInfo.getTeam() + "盘口:" + resultInfo.getPk() +
                     "大球赔率:" + resultInfo.getBig_pl() + "小球赔率:" + resultInfo.getSm_pl();
@@ -83,14 +83,14 @@ public class WebPhaser {
             String point = dataInfo.getPoint();
             DataInfo dataInfoPrimary = mapPrimary.get(point);
             if (dataInfoPrimary != null) {
-                ResultInfo resultInfo_big = WebPhaser.webpoterPhase(2500, keyPrimary,
+                ResultInfo resultInfo_big = WebPhaser.webpoterPhase(250, keyPrimary,
                         Double.valueOf(dataInfoPrimary.getBig_pl()),
                         Double.valueOf(dataInfo.getSm_pl()), point);
                 //TODO 推送消息
                 WebPhaser.printResultInfo(resultInfo_big,"bet","wb");
 
                 //bet-小 wb-大
-                ResultInfo resultInfo_sm = WebPhaser.webpoterPhase(2500, keyCustom,
+                ResultInfo resultInfo_sm = WebPhaser.webpoterPhase(250, keyCustom,
                         Double.valueOf(dataInfoPrimary.getSm_pl()),
                         Double.valueOf(dataInfo.getBig_pl()), point);
                 //TODO 推送消息
