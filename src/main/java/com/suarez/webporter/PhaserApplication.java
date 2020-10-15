@@ -1,7 +1,7 @@
 package com.suarez.webporter;
 
 import com.suarez.webporter.client.ConfigFrame;
-import com.suarez.webporter.core.app;
+import com.suarez.webporter.deal.BetWbDeal;
 import com.suarez.webporter.util.SpringBeanUtil;
 import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;
@@ -11,7 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
-@ComponentScan(basePackages = {"com.suarez.webporter.core","com.suarez.webporter.util","com.suarez.webporter.client"})
+@ComponentScan(basePackages = {"com.suarez.webporter.deal","com.suarez.webporter.util","com.suarez.webporter.client"})
 public class PhaserApplication {
 	private final static Logger logger = Logger.getLogger(PhaserApplication.class);
 
@@ -26,9 +26,9 @@ public class PhaserApplication {
 		ConfigFrame cf=new ConfigFrame();
 		cf.show();
 
-//		app app = (com.suarez.webporter.core.app) acx.getBean("app");
-//		Thread t = new Thread(app);
-//		t.start();
+		BetWbDeal deal = (BetWbDeal) acx.getBean("betWbDeal");
+		Thread t = new Thread(deal);
+		t.start();
 	}
 
 }
