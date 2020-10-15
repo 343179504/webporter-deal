@@ -52,7 +52,9 @@ public class Appendered extends Thread {
                     tableModel.setValueAt(info.getPk_bet(), rowIndex, 1);
                     tableModel.setValueAt(info.getPllx_bet(), rowIndex, 2);
                     tableModel.setValueAt(info.getPl_bet(), rowIndex, 3);
-                    tableModel.setValueAt(info.getEnrn_money(), rowIndex, 4);
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+
+                    tableModel.setValueAt(simpleDateFormat.format(new Date()), rowIndex, 4);
                     tableModel.setValueAt(" ", rowIndex, 5);
                     tableModel.setValueAt(info.getPk_wb(), rowIndex, 7);
                     tableModel.setValueAt(info.getPllx_wb(), rowIndex, 8);
