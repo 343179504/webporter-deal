@@ -33,6 +33,6 @@ public class MyTable extends JTable {                       // 实现自己的�
     }
     // 重写JTable类的isCellEditable(int row, int column)方法
     public boolean isCellEditable(int row, int column) {                // 表格不可编辑
-        return false;
+        return true;
     }
 }

@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.WriterAppender;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.io.PipedReader;
 import java.io.PipedWriter;
@@ -17,6 +18,9 @@ public class ConfigPrint {
     //    JTextArea logTextArea;
     JTable table;
     public ConfigFrame cf = new ConfigFrame();
+    DefaultTableCellRenderer tcr=null;
+    int m;
+    int n;
 
     public JPanel buildJpanel(JPanel panel) {
 
@@ -36,8 +40,29 @@ public class ConfigPrint {
         columnTitle.add("金额");
         Vector dataVector = new Vector();
         panel.add(cf.buildJBorder("日志", 0, y0 + 10, 1152, 720));
+        tcr = new DefaultTableCellRenderer() {
+            public Component getTableCellRendererComponent(JTable table,
+                                                           Object value, boolean isSelected, boolean hasFocus,
+                                                           int row, int column) {
+
+                JTextField   text   =   new   JTextField(value.toString());
+                if(row==n&column==m)  {
+
+                    text.setBackground(Color.RED);
+                    text.setForeground(Color.BLACK);
+                }   else   {
+                    text.setBackground(Color.WHITE);
+                    text.setForeground(Color.CYAN);
+                }
+                return   text;
+
+            }
+        };
+
         table = new MyTable(dataVector, columnTitle);
         table.setRowHeight(40);
+        table.setDefaultRenderer(Object.class, tcr);
+
         JScrollPane logTextArea = new JScrollPane(table);
         panel.add(logTextArea, BorderLayout.CENTER);
         logTextArea.setBounds(0, y0 + 40, 1152, 680);
