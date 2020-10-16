@@ -78,11 +78,11 @@ public class PropertiesUtil {
     }
 
     public static String getConUrl() {
-        return constant.getUrl();
+        return constant.getXqje();
     }
 
     public static void setConUrl(String url) {
-        constant.setUrl(url);
+        constant.setXqje(url);
     }
 
     public static String getConUserName() {

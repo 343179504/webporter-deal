@@ -46,13 +46,13 @@ public class ConfigPrint {
                                                            int row, int column) {
 
                 JTextField   text   =   new   JTextField(value.toString());
-                if(row==n&column==m)  {
+                if(column==2||column==8)  {
 
                     text.setBackground(Color.RED);
                     text.setForeground(Color.BLACK);
                 }   else   {
-                    text.setBackground(Color.WHITE);
-                    text.setForeground(Color.CYAN);
+//                    text.setBackground(Color.WHITE);
+//                    text.setForeground(Color.CYAN);
                 }
                 return   text;
 
@@ -65,7 +65,7 @@ public class ConfigPrint {
 
         JScrollPane logTextArea = new JScrollPane(table);
         panel.add(logTextArea, BorderLayout.CENTER);
-        logTextArea.setBounds(0, y0 + 40, 1152, 680);
+        logTextArea.setBounds(20, y0 + 30, 1100, 680);
 //        logTextArea.getViewport().add(logTextArea);
 //        panel.add(JScrollPane);
 

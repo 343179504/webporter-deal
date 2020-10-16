@@ -21,7 +21,7 @@ public class Constant {
     private Long eventPeriodUnit;
     private Integer eventPeriodMax;
     private Integer eventPeriodMin;
-    private String url;
+    private String xqje;
     private String userName;
     private String passWord;
 
@@ -105,12 +105,12 @@ public class Constant {
         this.eventPeriodMin = eventPeriodMin;
     }
 
-    public String getUrl() {
-        return url;
+    public String getXqje() {
+        return xqje;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setXqje(String xqje) {
+        this.xqje = xqje;
     }
 
     public String getUserName() {

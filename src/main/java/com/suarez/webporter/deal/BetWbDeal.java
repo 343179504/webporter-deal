@@ -26,7 +26,7 @@ public class BetWbDeal implements Runnable {
     public void begin() {
         while (true) {
             try {
-                Set<String> Wbkeys = redisUtil.keysByPre("nwb");
+                Set<String> Wbkeys = redisUtil.keysByPre("wb");
                 Set<String> Betkeys = redisUtil.keysByPre("bet");
                 for (String betkey : Betkeys) {
                     float maxSimilarity = 0;
@@ -44,7 +44,7 @@ public class BetWbDeal implements Runnable {
                     } else {
                         //System.out.println(betkey+"未找到匹配的赛事....");
                     }
-                    //redisUtil.removeKey(betkey);
+                    redisUtil.removeKey(betkey);
                 }
 
             } catch (Exception e) {

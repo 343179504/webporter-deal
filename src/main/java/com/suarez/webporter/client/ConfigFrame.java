@@ -12,7 +12,7 @@ public class ConfigFrame {
 
         JPanel panel = new JPanel();
         panel.setLayout(null);
-//        panel = new ConfigDB().buildJpanel(panel);
+        panel = new ConfigDB().buildJpanel(panel);
 //        panel = new ConfigSocket().buildJpanel(panel);
 //        panel = new ConfigEvent().buildJpanel(panel);
 //        panel = new ConfigTask().buildJpanel(panel);
@@ -61,14 +61,14 @@ public class ConfigFrame {
 
     private static void buildFrame(JComponent component) {
         JFrame frame = new JFrame("Simulater Terminal");
-        component.setBounds(0, 0, 1152, 864);
+        component.setBounds(0, 0, 1652, 864);
         frame.add(component);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(new BorderLayout());
         frame.getContentPane().setLayout(null);
         frame.getContentPane().add(BorderLayout.CENTER, component);
         // 设置窗口最小尺寸
-        frame.setMinimumSize(new Dimension(1152, 864));
+        frame.setMinimumSize(new Dimension(1652, 864));
 
         frame.pack();
         frame.setLocationRelativeTo(null);
