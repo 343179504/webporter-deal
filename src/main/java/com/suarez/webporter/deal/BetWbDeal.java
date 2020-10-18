@@ -78,7 +78,7 @@ public class BetWbDeal implements Runnable {
             String pointWb = dataInfoWb.getPoint();
             DataInfo dataInfoBet = mapBet.get(pointWb);
             if (dataInfoBet != null) {
-                ResultInfo resultInfo_big = WebPhaser.webpoterPhase(250, keyBet,
+                ResultInfo resultInfo_big = WebPhaser.webpoterPhase(1000, keyBet,
                         Double.valueOf(dataInfoBet.getBig_pl()),
                         Double.valueOf(dataInfoWb.getSm_pl()), pointWb);
                 if (resultInfo_big.getIsTrue()) {
@@ -107,7 +107,7 @@ public class BetWbDeal implements Runnable {
                 }
 
                 //bet-小 wb-大
-                ResultInfo resultInfo_sm = WebPhaser.webpoterPhase(250, keyWb,
+                ResultInfo resultInfo_sm = WebPhaser.webpoterPhase(1000, keyWb,
                         Double.valueOf(dataInfoBet.getSm_pl()),
                         Double.valueOf(dataInfoWb.getBig_pl()), pointWb);
                 //TODO 推送消息
