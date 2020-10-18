@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,15 +50,54 @@ public class ConfigDB {
 
         panel.add(cf.buildJLabel("小球赔率：", 1185, y0 + 70, 80, 25));
         xqplTextField = cf.buildJTextField(xqplTextField, xqpl, "xqpl", 20, 1270, y0 + 70, 165, 25);
+        xqplTextField.getDocument().addDocumentListener(new DocumentListener(){
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String text = null;
+                try {
+                    text = e.getDocument().getText(e.getDocument().getStartPosition().getOffset(), e.getDocument().getLength());
+                } catch (BadLocationException ex) {
+                    ex.printStackTrace();
+                }
+                activeEvent();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
         panel.add(xqplTextField);
         // 用户名
         panel.add(cf.buildJLabel("大球赔率：", 1185, y0 + 100, 80, 25));
         dqplTextField = cf.buildJTextField(dqplTextField, dqpl, "dqpl", 20, 1270, y0 + 100, 165, 25);
         panel.add(dqplTextField);
+        dqplTextField.getDocument().addDocumentListener(new DocumentListener(){
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+            }
 
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String text = null;
+                try {
+                    text = e.getDocument().getText(e.getDocument().getStartPosition().getOffset(), e.getDocument().getLength());
+                } catch (BadLocationException ex) {
+                    ex.printStackTrace();
+                }
+                activeEvent();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
         // 密码
         panel.add(cf.buildJLabel("大球金额：", 1185, y0 + 130, 180, 25));
-        dqje = cf.buildJLabel("暂无", 1270, y0 + 130, 80, 25);
+        dqje = cf.buildJLabel("暂无", 1270, y0 + 130, 200, 25);
         panel.add(dqje);
 
         panel.add(cf.buildJLabel("最大收益：", 1185, y0 + 160, 180, 25));
@@ -66,11 +107,12 @@ public class ConfigDB {
         // 添加按钮，绑定事件监听
         JButton saveButton = cf.buildJButton("开始计算", 1185, y0 + 210, 100, 25);
         addActionListener(saveButton);
+
         panel.add(saveButton);
+
 
         return panel;
     }
-
     // 为按钮绑定监听
     private void addActionListener(JButton saveButton) {
         saveButton.addActionListener(
@@ -83,9 +125,10 @@ public class ConfigDB {
 
     }
 
+
     // save event
     private void activeEvent() {
-        //小球金额
+        try{//小球金额
         String xqje = xqjeTextField.getText().toString();
         //大球赔率
         String dqpl = dqplTextField.getText().toString();
@@ -95,7 +138,7 @@ public class ConfigDB {
         DecimalFormat df = new DecimalFormat("0.0");//格式化小数
 
         float sy_tmp = 0;
-        if (!StringUtils.isEmpty(dqpl)) {
+        if (!StringUtils.isEmpty(dqpl)&&!StringUtils.isEmpty(xqpl)) {
             float dqje_tmp = Float.parseFloat(xqje)/Float.parseFloat(dqpl);
             if(!StringUtils.isEmpty(xqpl)){
                 sy_tmp = (Float.parseFloat(xqje)*Float.parseFloat(xqpl))-dqje_tmp;
@@ -106,13 +149,15 @@ public class ConfigDB {
             if(sy_tmp<0){
                  dqjefw=" - ";
             }else{
-                 dqjefw = df.format(dqje_tmp)+" 至 "+df.format(Float.parseFloat(xqje)*Float.parseFloat(xqpl));
+                 dqjefw = df.format(dqje_tmp)+" < 投入 < "+df.format(Float.parseFloat(xqje)*Float.parseFloat(xqpl));
 
             }
             dqje.setText(dqjefw);//返回的是String类型
         }else{
-            Toolkit.getDefaultToolkit().beep();
-            JOptionPane.showMessageDialog(null, "请输入大球赔率！", "提示", JOptionPane.INFORMATION_MESSAGE);
+            //Toolkit.getDefaultToolkit().beep();
+            //JOptionPane.showMessageDialog(null, "请输入大球赔率！", "提示", JOptionPane.INFORMATION_MESSAGE);
+        }}catch(Exception e){
+
         }
     }
 }
