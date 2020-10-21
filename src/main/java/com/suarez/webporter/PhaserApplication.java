@@ -2,6 +2,7 @@ package com.suarez.webporter;
 
 import com.suarez.webporter.client.ConfigFrame;
 import com.suarez.webporter.deal.BetWbDeal;
+import com.suarez.webporter.driver.WbDriver;
 import com.suarez.webporter.util.SpringBeanUtil;
 import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;
@@ -29,6 +30,9 @@ public class PhaserApplication {
 		BetWbDeal deal = (BetWbDeal) acx.getBean("betWbDeal");
 		Thread t = new Thread(deal);
 		t.start();
+
+		WbDriver wbDriver = (WbDriver) acx.getBean("wbDriver");
+		wbDriver.init();
 	}
 
 }
