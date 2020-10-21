@@ -10,10 +10,13 @@ import org.springframework.util.StringUtils;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.PipedReader;
 import java.io.PipedWriter;
 import java.io.Writer;
@@ -45,6 +48,7 @@ public class ConfigPrint {
         columnTitle.add("大小球");
         columnTitle.add("赔率");
         columnTitle.add("金额");
+        columnTitle.add("操作");
         Vector dataVector = new Vector();
         panel.add(cf.buildJBorder("日志", 0, y0 + 10, 1152, 720));
         tcr = new DefaultTableCellRenderer() {
@@ -65,11 +69,30 @@ public class ConfigPrint {
 
             }
         };
-
         table = new MyTable(dataVector, columnTitle);
         table.setRowHeight(40);
+//        table.setRowSelectionAllowed(true);
         table.setDefaultRenderer(Object.class, tcr);
 
+        table.getColumnModel().getColumn(11).setCellRenderer(new MyButtonRender());
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  //单选
+
+        JButton dakaiButton = cf.buildJButton("打开wb", 1440, y0 + 210, 100, 25);
+        dakaiButton.addActionListener(new ActionListener(){//添加事件
+            public void actionPerformed(ActionEvent e){
+                int selectedRow = table.getSelectedRow();//获得选中行的索引
+                if(selectedRow!= -1)   //是否存在选中行
+                {
+                    //获取选中球队万博数据：
+                    String name = (String) table.getModel().getValueAt(selectedRow,6);
+                    String pankou = (String) table.getModel().getValueAt(selectedRow,7);
+                    String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow,8);
+//                    SpringBeanUtil.getBean().
+
+                }
+            }
+        });
+        panel.add(dakaiButton);
         JScrollPane logTextArea = new JScrollPane(table);
 
         // 添加按钮，绑定事件监听
