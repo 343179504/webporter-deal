@@ -1,16 +1,23 @@
 package com.suarez.webporter.client;
 
 
+import com.suarez.webporter.util.SpringBeanUtil;
 import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.WriterAppender;
+import org.springframework.util.StringUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.PipedReader;
 import java.io.PipedWriter;
 import java.io.Writer;
+import java.text.DecimalFormat;
 import java.util.Vector;
 
 public class ConfigPrint {
@@ -64,6 +71,21 @@ public class ConfigPrint {
         table.setDefaultRenderer(Object.class, tcr);
 
         JScrollPane logTextArea = new JScrollPane(table);
+
+        // 添加按钮，绑定事件监听
+        JButton clearButton = cf.buildJButton("清除数据", 1305, y0 + 210, 100, 25);
+        addActionListener(clearButton);
+
+        panel.add(clearButton);
+
+//        // 添加按钮，绑定事件监听
+//        JButton clearButton = cf.buildJButton("", 1305, y0 + 210, 100, 25);
+//        addActionListener(clearButton);
+//        {
+//            SpringBeanUtil.getBean("wb..");
+//        }
+//
+//        panel.add(clearButton);
         panel.add(logTextArea, BorderLayout.CENTER);
         logTextArea.setBounds(20, y0 + 30, 1100, 680);
 //        logTextArea.getViewport().add(logTextArea);
@@ -78,4 +100,26 @@ public class ConfigPrint {
         return panel;
     }
 
+    // 为按钮绑定监听
+    private void addActionListener(JButton saveButton) {
+        saveButton.addActionListener(
+                new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        activeEvent();
+                    }
+                });
+
+    }
+
+    // save event
+    private void activeEvent() {
+        DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+        int rowCount = tableModel.getRowCount();
+        if (rowCount > 0) {
+            for (int i = rowCount-1; i >=0; i--) {
+                tableModel.removeRow(i);
+            }
+        }
+    }
 }
