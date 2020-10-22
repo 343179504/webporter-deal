@@ -84,9 +84,9 @@ public class ConfigPrint {
                 if(selectedRow!= -1)   //是否存在选中行
                 {
                     //获取选中球队万博数据：
-                    String name = (String) table.getModel().getValueAt(selectedRow,6);
-                    String pankou = (String) table.getModel().getValueAt(selectedRow,7);
-                    String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow,8);
+                    String name = (String) table.getModel().getValueAt(selectedRow,5);
+                    String pankou = (String) table.getModel().getValueAt(selectedRow,6);
+                    String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow,7);
                     NwbDriver nwbDriver = (NwbDriver) SpringBeanUtil.getBean("nwbDriver");
                     String[] nameArray = name.split("_");
                     String name_z = nameArray[0];
@@ -103,9 +103,9 @@ public class ConfigPrint {
                 if(selectedRow!= -1)   //是否存在选中行
                 {
                     //获取选中球队万博数据：
-                    String name = (String) table.getModel().getValueAt(selectedRow,6);
-                    String pankou = (String) table.getModel().getValueAt(selectedRow,7);
-                    String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow,8);
+                    String name = (String) table.getModel().getValueAt(selectedRow,0);
+                    String pankou = (String) table.getModel().getValueAt(selectedRow,1);
+                    String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow,2);
                     BetDriver betDriver = (BetDriver) SpringBeanUtil.getBean("betDriver");
                     String[] nameArray = name.split("_");
                     String name_z = nameArray[0];
@@ -131,6 +131,7 @@ public class ConfigPrint {
             t.start();
 
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return panel;
     }

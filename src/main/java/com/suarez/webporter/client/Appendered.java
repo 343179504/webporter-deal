@@ -1,5 +1,6 @@
 package com.suarez.webporter.client;
 
+import com.suarez.webporter.deal.BetNwbDeal;
 import com.suarez.webporter.deal.BetWbDeal;
 import com.suarez.webporter.deal.ResultInfo;
 import com.suarez.webporter.deal.bet_wb.Bet_Wb_Info;
@@ -52,7 +53,7 @@ public class Appendered extends Thread {
                     }
                 }
 
-                Map<String, Bet_Wb_Info> rsMap = BetWbDeal.map;
+                Map<String, Bet_Wb_Info> rsMap = BetNwbDeal.map;
                 Set<String> keySet = rsMap.keySet();
                 for (String key : keySet) {
                     Bet_Wb_Info info = rsMap.get(key);
@@ -96,7 +97,7 @@ public class Appendered extends Thread {
                 }
 
             }catch(Exception e){
-                //e.printStackTrace();
+                e.printStackTrace();
             }
 
         }

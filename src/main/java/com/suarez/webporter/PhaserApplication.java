@@ -15,7 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
-@ComponentScan(basePackages = {"com.suarez.webporter.deal","com.suarez.webporter.util","com.suarez.webporter.client"})
+@ComponentScan(basePackages = {"com.suarez.webporter.deal","com.suarez.webporter.util","com.suarez.webporter.driver","com.suarez.webporter.client"})
 public class PhaserApplication {
 	private final static Logger logger = Logger.getLogger(PhaserApplication.class);
 
@@ -33,6 +33,11 @@ public class PhaserApplication {
 //		BetWbDeal deal = (BetWbDeal) acx.getBean("betWbDeal");
 //		Thread t = new Thread(deal);
 //		t.start();
+        NwbDriver nwbDriver = (NwbDriver) acx.getBean("nwbDriver");
+        nwbDriver.init();
+
+        BetDriver betDriver = (BetDriver) acx.getBean("betDriver");
+        betDriver.init();
 
 		BetNwbDeal deal = (BetNwbDeal) acx.getBean("betNwbDeal");
 		Thread t = new Thread(deal);
@@ -40,11 +45,7 @@ public class PhaserApplication {
 
 //		WbDriver wbDriver = (WbDriver) acx.getBean("wbDriver");
 //		wbDriver.init();
-		NwbDriver nwbDriver = (NwbDriver) acx.getBean("nwbDriver");
-		nwbDriver.init();
 
-		BetDriver betDriver = (BetDriver) acx.getBean("betDriver");
-		betDriver.init();
 	}
 
 }
