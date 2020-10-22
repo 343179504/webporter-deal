@@ -1,6 +1,7 @@
 package com.suarez.webporter;
 
 import com.suarez.webporter.client.ConfigFrame;
+import com.suarez.webporter.deal.BetNwbDeal;
 import com.suarez.webporter.deal.BetWbDeal;
 import com.suarez.webporter.driver.BetDriver;
 import com.suarez.webporter.driver.NwbDriver;
@@ -14,7 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
-@ComponentScan(basePackages = {"com.suarez.webporter.deal","com.suarez.webporter.driver","com.suarez.webporter.util","com.suarez.webporter.client"})
+@ComponentScan(basePackages = {"com.suarez.webporter.deal","com.suarez.webporter.util","com.suarez.webporter.client"})
 public class PhaserApplication {
 	private final static Logger logger = Logger.getLogger(PhaserApplication.class);
 
@@ -29,7 +30,11 @@ public class PhaserApplication {
 		ConfigFrame cf=new ConfigFrame();
 		cf.show();
 
-		BetWbDeal deal = (BetWbDeal) acx.getBean("betWbDeal");
+//		BetWbDeal deal = (BetWbDeal) acx.getBean("betWbDeal");
+//		Thread t = new Thread(deal);
+//		t.start();
+
+		BetNwbDeal deal = (BetNwbDeal) acx.getBean("betNwbDeal");
 		Thread t = new Thread(deal);
 		t.start();
 
