@@ -15,4 +15,10 @@ public class WebporterConfig {
     @Value("${webdriver.chrome.listen.address}")
     private String listenAddress;
 
+    @Value("${webdriver.chrome.listen.address.bet}")
+    private String bet_listenAddress;
+
+    @Value("${webdriver.chrome.listen.address.nwb}")
+    private String nwb_listenAddress;
+
 }

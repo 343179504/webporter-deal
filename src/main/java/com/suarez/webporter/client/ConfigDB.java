@@ -41,15 +41,15 @@ public class ConfigDB {
 
         int y0 = 0;
 
-        panel.add(cf.buildJBorder("计算器", 1170, y0 + 10, 400, 250));
+        panel.add(cf.buildJBorder("计算器", 1015, y0 + 10, 300, 250));
 
         // URL
-        panel.add(cf.buildJLabel("小球金额：", 1185, y0 + 40, 80, 25));
-        xqjeTextField = cf.buildJTextField(xqjeTextField, xqje, "xqje", 20, 1270, y0 + 40, 165, 25);
+        panel.add(cf.buildJLabel("小球金额：", 1030, y0 + 40, 80, 25));
+        xqjeTextField = cf.buildJTextField(xqjeTextField, xqje, "xqje", 20, 1100, y0 + 40, 80, 25);
         panel.add(xqjeTextField);
 
-        panel.add(cf.buildJLabel("小球赔率：", 1185, y0 + 70, 80, 25));
-        xqplTextField = cf.buildJTextField(xqplTextField, xqpl, "xqpl", 20, 1270, y0 + 70, 165, 25);
+        panel.add(cf.buildJLabel("小球赔率：", 1030, y0 + 70, 80, 25));
+        xqplTextField = cf.buildJTextField(xqplTextField, xqpl, "xqpl", 20, 1100, y0 + 70, 80, 25);
         xqplTextField.getDocument().addDocumentListener(new DocumentListener(){
             @Override
             public void removeUpdate(DocumentEvent e) {
@@ -72,8 +72,8 @@ public class ConfigDB {
         });
         panel.add(xqplTextField);
         // 用户名
-        panel.add(cf.buildJLabel("大球赔率：", 1185, y0 + 100, 80, 25));
-        dqplTextField = cf.buildJTextField(dqplTextField, dqpl, "dqpl", 20, 1270, y0 + 100, 165, 25);
+        panel.add(cf.buildJLabel("大球赔率：", 1030, y0 + 100, 80, 25));
+        dqplTextField = cf.buildJTextField(dqplTextField, dqpl, "dqpl", 20, 1100, y0 + 100, 80, 25);
         panel.add(dqplTextField);
         dqplTextField.getDocument().addDocumentListener(new DocumentListener(){
             @Override
@@ -96,35 +96,16 @@ public class ConfigDB {
             }
         });
         // 密码
-        panel.add(cf.buildJLabel("大球金额：", 1185, y0 + 130, 180, 25));
-        dqje = cf.buildJLabel("暂无", 1270, y0 + 130, 200, 25);
+        panel.add(cf.buildJLabel("大球金额：", 1030, y0 + 130, 180, 25));
+        dqje = cf.buildJLabel("暂无", 1100, y0 + 130, 200, 25);
         panel.add(dqje);
 
-        panel.add(cf.buildJLabel("最大收益：", 1185, y0 + 160, 180, 25));
-        sy = cf.buildJLabel("暂无", 1270, y0 + 160, 80, 25);
+        panel.add(cf.buildJLabel("最大收益：", 1030, y0 + 160, 180, 25));
+        sy = cf.buildJLabel("暂无", 1100, y0 + 160, 80, 25);
         panel.add(sy);
-
-        // 添加按钮，绑定事件监听
-        JButton saveButton = cf.buildJButton("开始计算", 1185, y0 + 210, 100, 25);
-        addActionListener(saveButton);
-
-        panel.add(saveButton);
-
 
         return panel;
     }
-    // 为按钮绑定监听
-    private void addActionListener(JButton saveButton) {
-        saveButton.addActionListener(
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        activeEvent();
-                    }
-                });
-
-    }
-
 
     // save event
     private void activeEvent() {

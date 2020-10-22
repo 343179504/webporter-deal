@@ -1,6 +1,9 @@
 package com.suarez.webporter.client;
 
 
+import com.suarez.webporter.driver.BetDriver;
+import com.suarez.webporter.driver.NwbDriver;
+import com.suarez.webporter.driver.WbDriver;
 import com.suarez.webporter.util.SpringBeanUtil;
 import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
@@ -41,16 +44,14 @@ public class ConfigPrint {
         columnTitle.add("盘口");
         columnTitle.add("大小球");
         columnTitle.add("赔率");
-        columnTitle.add("金额");
-        columnTitle.add("-");
+        columnTitle.add("状态");
         columnTitle.add("队名(万博)");
         columnTitle.add("盘口");
         columnTitle.add("大小球");
         columnTitle.add("赔率");
         columnTitle.add("金额");
-        columnTitle.add("操作");
         Vector dataVector = new Vector();
-        panel.add(cf.buildJBorder("日志", 0, y0 + 10, 1152, 720));
+        panel.add(cf.buildJBorder("日志", 0, y0 + 10, 1000, 360));
         tcr = new DefaultTableCellRenderer() {
             public Component getTableCellRendererComponent(JTable table,
                                                            Object value, boolean isSelected, boolean hasFocus,
@@ -71,14 +72,13 @@ public class ConfigPrint {
         };
         table = new MyTable(dataVector, columnTitle);
         table.setRowHeight(40);
-//        table.setRowSelectionAllowed(true);
         table.setDefaultRenderer(Object.class, tcr);
 
-        table.getColumnModel().getColumn(11).setCellRenderer(new MyButtonRender());
+//        table.getColumnModel().getColumn(11).setCellRenderer(new MyButtonRender());
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  //单选
 
-        JButton dakaiButton = cf.buildJButton("打开wb", 1440, y0 + 210, 100, 25);
-        dakaiButton.addActionListener(new ActionListener(){//添加事件
+        JButton wbButton = cf.buildJButton("万博", 1030, y0 + 210, 80, 25);
+        wbButton.addActionListener(new ActionListener(){//添加事件
             public void actionPerformed(ActionEvent e){
                 int selectedRow = table.getSelectedRow();//获得选中行的索引
                 if(selectedRow!= -1)   //是否存在选中行
@@ -87,32 +87,44 @@ public class ConfigPrint {
                     String name = (String) table.getModel().getValueAt(selectedRow,6);
                     String pankou = (String) table.getModel().getValueAt(selectedRow,7);
                     String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow,8);
-//                    SpringBeanUtil.getBean().
+                    NwbDriver nwbDriver = (NwbDriver) SpringBeanUtil.getBean("nwbDriver");
+                    String[] nameArray = name.split("_");
+                    String name_z = nameArray[0];
+                    nwbDriver.focusOn(name_z,pankou,daxiaoqiu);
 
                 }
             }
         });
-        panel.add(dakaiButton);
+        panel.add(wbButton);
+        JButton betButton = cf.buildJButton("Bet", 1115, y0 + 210, 80, 25);
+        betButton.addActionListener(new ActionListener(){//添加事件
+            public void actionPerformed(ActionEvent e){
+                int selectedRow = table.getSelectedRow();//获得选中行的索引
+                if(selectedRow!= -1)   //是否存在选中行
+                {
+                    //获取选中球队万博数据：
+                    String name = (String) table.getModel().getValueAt(selectedRow,6);
+                    String pankou = (String) table.getModel().getValueAt(selectedRow,7);
+                    String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow,8);
+                    BetDriver betDriver = (BetDriver) SpringBeanUtil.getBean("betDriver");
+                    String[] nameArray = name.split("_");
+                    String name_z = nameArray[0];
+                    betDriver.focusOn(name_z,pankou,daxiaoqiu);
+
+                }
+            }
+        });
+        panel.add(betButton);
         JScrollPane logTextArea = new JScrollPane(table);
 
         // 添加按钮，绑定事件监听
-        JButton clearButton = cf.buildJButton("清除数据", 1305, y0 + 210, 100, 25);
+        JButton clearButton = cf.buildJButton("清除", 1210, y0 + 210, 80, 25);
         addActionListener(clearButton);
 
         panel.add(clearButton);
 
-//        // 添加按钮，绑定事件监听
-//        JButton clearButton = cf.buildJButton("", 1305, y0 + 210, 100, 25);
-//        addActionListener(clearButton);
-//        {
-//            SpringBeanUtil.getBean("wb..");
-//        }
-//
-//        panel.add(clearButton);
         panel.add(logTextArea, BorderLayout.CENTER);
-        logTextArea.setBounds(20, y0 + 30, 1100, 680);
-//        logTextArea.getViewport().add(logTextArea);
-//        panel.add(JScrollPane);
+        logTextArea.setBounds(20, y0 + 30, 960, 320);
 
         try {
             Thread t = new Appendered(table);

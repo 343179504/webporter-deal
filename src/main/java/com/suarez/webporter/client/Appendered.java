@@ -66,11 +66,10 @@ public class Appendered extends Thread {
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
 
                         tableModel.setValueAt(this.getRandomString((int)(1+Math.random()*(7-1+1))), rowIndex, 4);
-                        tableModel.setValueAt(" ", rowIndex, 5);
-                        tableModel.setValueAt(info.getPk_wb(), rowIndex, 7);
-                        tableModel.setValueAt(info.getPllx_wb(), rowIndex, 8);
-                        tableModel.setValueAt(info.getPl_wb(), rowIndex, 9);
-                        tableModel.setValueAt(info.getEnrn_money(), rowIndex, 10);
+                        tableModel.setValueAt(info.getPk_wb(), rowIndex, 6);
+                        tableModel.setValueAt(info.getPllx_wb(), rowIndex, 7);
+                        tableModel.setValueAt(info.getPl_wb(), rowIndex, 8);
+                        tableModel.setValueAt(info.getEnrn_money(), rowIndex, 9);
                         //table.setModel(tableModel);
                     } else {
                         //TODO 新增
@@ -81,12 +80,11 @@ public class Appendered extends Thread {
                         teamObj[3] = info.getPl_bet();
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
                         teamObj[4] = this.getRandomString((int)(1+Math.random()*(7-1+1)));//simpleDateFormat.format(new Date());
-                        teamObj[5] = " ";
-                        teamObj[6] = info.getTeam_wb();
-                        teamObj[7] = info.getPk_wb();
-                        teamObj[8] = info.getPllx_wb();
-                        teamObj[9] = info.getPl_wb();
-                        teamObj[10] = info.getEnrn_money();
+                        teamObj[5] = info.getTeam_wb();
+                        teamObj[6] = info.getPk_wb();
+                        teamObj[7] = info.getPllx_wb();
+                        teamObj[8] = info.getPl_wb();
+                        teamObj[9] = info.getEnrn_money();
                         tableModel.addRow(teamObj);
                         //table.setModel(tableModel);
                     }
