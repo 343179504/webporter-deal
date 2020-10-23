@@ -65,14 +65,14 @@ public class NwbDriver {
                 List<WebElement> teamNameDiv = team.findElements(By.className("team-name"));
                 if (teamNameDiv.size() != 0) {
                     //主队名称
-                    String zhudui = teamNameDiv.get(0).getAttribute("innerHTML");
+                    String zhudui = teamNameDiv.get(0).getAttribute("innerHTML").trim();
                     if (name.equals(zhudui)) {
                         flag=true;
                         List<WebElement> pankouList = team.findElements(By.className("options-li")).get(1).findElements(By.className("item"));
                         if (pankouList.size() > 1) {
                             WebElement dqElement = pankouList.get(0);
                             WebElement xqElement = pankouList.get(1);
-                            String dqPkTmp = dqElement.findElement(By.className("ratio")).getText().trim();
+                            String dqPkTmp = dqElement.findElement(By.className("ratio")).getAttribute("innerHTML").trim();
                             String dqpkName = dqPkTmp.split(" ")[1];
                             if (dqpkName.equals(pankou)) {
                                 pk_flag=true;
