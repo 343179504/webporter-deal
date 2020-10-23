@@ -52,73 +52,99 @@ public class ConfigPrint {
         columnTitle.add("金额");
         Vector dataVector = new Vector();
         panel.add(cf.buildJBorder("日志", 0, y0 + 10, 1000, 360));
-        tcr = new DefaultTableCellRenderer() {
-            public Component getTableCellRendererComponent(JTable table,
-                                                           Object value, boolean isSelected, boolean hasFocus,
-                                                           int row, int column) {
-
-                JTextField   text   =   new   JTextField(value.toString());
-                if(column==2||column==8)  {
-
-                    text.setBackground(Color.RED);
-                    text.setForeground(Color.BLACK);
-                }   else   {
-//                    text.setBackground(Color.WHITE);
-//                    text.setForeground(Color.CYAN);
-                }
-                return   text;
-
+        DefaultTableCellRenderer tcr = new DefaultTableCellRenderer() {
+           public Component getTableCellRendererComponent(JTable table, Object value,
+                 boolean isSelected, boolean hasFocus, int row, int column) {
+                 Component cell = super.getTableCellRendererComponent
+                  (table, value, isSelected, hasFocus, row, column);
+                  if(column==5 && cell.isBackgroundSet()||column==0 && cell.isBackgroundSet())//设置变色的单元格
+                     cell.setForeground(Color.red);
+                  else
+                    cell.setForeground(Color.BLACK);
+                return cell;
             }
         };
         table = new MyTable(dataVector, columnTitle);
         table.setRowHeight(40);
         table.setDefaultRenderer(Object.class, tcr);
-
-//        table.getColumnModel().getColumn(11).setCellRenderer(new MyButtonRender());
+        table.setSelectionBackground(new Color(154, 154, 154));
+//        table.getColumnModel().getColumn(11).setCellRenderer(new MyButtonRender());//设置列按钮
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  //单选
+        table.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int rowI = table.rowAtPoint(e.getPoint());// 得到table的行号
+                int columnI = table.columnAtPoint(e.getPoint());// 得到table的列号
+                System.out.println("rowI"+rowI+" "+"columnI"+columnI);
 
-        JButton wbButton = cf.buildJButton("万博", 1030, y0 + 210, 80, 25);
-        wbButton.addActionListener(new ActionListener(){//添加事件
-            public void actionPerformed(ActionEvent e){
-                int selectedRow = table.getSelectedRow();//获得选中行的索引
-                if(selectedRow!= -1)   //是否存在选中行
-                {
-                    //获取选中球队万博数据：
-                    String name = (String) table.getModel().getValueAt(selectedRow,5);
-                    String pankou = (String) table.getModel().getValueAt(selectedRow,6);
-                    String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow,7);
-                    NwbDriver nwbDriver = (NwbDriver) SpringBeanUtil.getBean("nwbDriver");
-                    String[] nameArray = name.split("_");
-                    String name_z = nameArray[0];
-                    nwbDriver.focusOn(name_z,pankou,daxiaoqiu);
-
-                }
-            }
-        });
-        panel.add(wbButton);
-        JButton betButton = cf.buildJButton("Bet", 1115, y0 + 210, 80, 25);
-        betButton.addActionListener(new ActionListener(){//添加事件
-            public void actionPerformed(ActionEvent e){
-                int selectedRow = table.getSelectedRow();//获得选中行的索引
-                if(selectedRow!= -1)   //是否存在选中行
-                {
-                    //获取选中球队万博数据：
-                    String name = (String) table.getModel().getValueAt(selectedRow,0);
-                    String pankou = (String) table.getModel().getValueAt(selectedRow,1);
-                    String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow,2);
-                    BetDriver betDriver = (BetDriver) SpringBeanUtil.getBean("betDriver");
-                    String[] nameArray = name.split("_");
-                    String name_z = nameArray[0];
-                    betDriver.focusOn(name_z,pankou,daxiaoqiu);
+                if (rowI > -1&&columnI>-1){
+                    int selectedRow = table.getSelectedRow();//获得选中行的索引
+                    if(0==columnI){//点击bet队名
+                        //获取选中球队万博数据：
+                        String name = (String) table.getModel().getValueAt(selectedRow,0);
+                        String pankou = (String) table.getModel().getValueAt(selectedRow,1);
+                        String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow,2);
+                        BetDriver betDriver = (BetDriver) SpringBeanUtil.getBean("betDriver");
+                        String[] nameArray = name.split("_");
+                        String name_z = nameArray[0];
+                        betDriver.focusOn(name_z,pankou,daxiaoqiu);
+                    }
+                    if(5==columnI){//点击wb队名
+                        //获取选中球队万博数据：
+                        String name = (String) table.getModel().getValueAt(selectedRow,5);
+                        String pankou = (String) table.getModel().getValueAt(selectedRow,6);
+                        String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow,7);
+                        NwbDriver nwbDriver = (NwbDriver) SpringBeanUtil.getBean("nwbDriver");
+                        String[] nameArray = name.split("_");
+                        String name_z = nameArray[0];
+                        nwbDriver.focusOn(name_z,pankou,daxiaoqiu);
+                    }
 
                 }
             }
         });
-        panel.add(betButton);
+
+//        JButton wbButton = cf.buildJButton("万博", 1030, y0 + 210, 80, 25);
+//        wbButton.addActionListener(new ActionListener(){//添加事件
+//            public void actionPerformed(ActionEvent e){
+//                int selectedRow = table.getSelectedRow();//获得选中行的索引
+//                if(selectedRow!= -1)   //是否存在选中行
+//                {
+//                    //获取选中球队万博数据：
+//                    String name = (String) table.getModel().getValueAt(selectedRow,5);
+//                    String pankou = (String) table.getModel().getValueAt(selectedRow,6);
+//                    String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow,7);
+//                    NwbDriver nwbDriver = (NwbDriver) SpringBeanUtil.getBean("nwbDriver");
+//                    String[] nameArray = name.split("_");
+//                    String name_z = nameArray[0];
+//                    nwbDriver.focusOn(name_z,pankou,daxiaoqiu);
+//
+//                }
+//            }
+//        });
+//        panel.add(wbButton);
+//        JButton betButton = cf.buildJButton("Bet", 1115, y0 + 210, 80, 25);
+//        betButton.addActionListener(new ActionListener(){//添加事件
+//            public void actionPerformed(ActionEvent e){
+//                int selectedRow = table.getSelectedRow();//获得选中行的索引
+//                if(selectedRow!= -1)   //是否存在选中行
+//                {
+//                    //获取选中球队万博数据：
+//                    String name = (String) table.getModel().getValueAt(selectedRow,0);
+//                    String pankou = (String) table.getModel().getValueAt(selectedRow,1);
+//                    String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow,2);
+//                    BetDriver betDriver = (BetDriver) SpringBeanUtil.getBean("betDriver");
+//                    String[] nameArray = name.split("_");
+//                    String name_z = nameArray[0];
+//                    betDriver.focusOn(name_z,pankou,daxiaoqiu);
+//
+//                }
+//            }
+//        });
+//        panel.add(betButton);
         JScrollPane logTextArea = new JScrollPane(table);
 
         // 添加按钮，绑定事件监听
-        JButton clearButton = cf.buildJButton("清除", 1210, y0 + 210, 80, 25);
+        JButton clearButton = cf.buildJButton("清除", 1030, y0 + 210, 80, 25);
         addActionListener(clearButton);
 
         panel.add(clearButton);

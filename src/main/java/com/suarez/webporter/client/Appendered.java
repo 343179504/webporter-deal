@@ -12,6 +12,7 @@ import javax.swing.table.TableModel;
 import java.io.PipedReader;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Appendered extends Thread {
     PipedReader reader;
@@ -29,6 +30,32 @@ public class Appendered extends Thread {
         this.scroll = scroll;
 
     }
+
+    public Map<String, Bet_Wb_Info> getTestData(){
+        Map<String, Bet_Wb_Info> map = new ConcurrentHashMap<>();
+        Bet_Wb_Info info = new Bet_Wb_Info();
+        info.setIsTrue(true);
+        //设置bet信息
+        info.setTeam_bet("000");
+        info.setPk_bet("2.5");
+        info.setPllx_bet("大");
+        info.setPl_bet("1");
+        info.setMoney_bet("100");
+        //设置wb信息
+        info.setTeam_wb("111");
+        info.setPk_wb("2.5");
+        info.setPllx_wb("小");
+        info.setPl_wb("2.1");
+        info.setMoney_wb("5");
+        //设置金额
+        info.setEnrn_money("100");
+        map.put("0", info);
+        map.put("1", info);
+        map.put("2", info);
+
+        return map;
+    }
+
     public String getRandomString(int length){
         String str="▶▶▶▶▶▶▶▶▶▶";
         Random random=new Random();
@@ -40,6 +67,10 @@ public class Appendered extends Thread {
         return sb.toString();
     }
     public void run() {
+//        Map<String, Bet_Wb_Info> rsMap = BetNwbDeal.map;
+//
+//        rsMap=this.getTestData();
+
         while (true) {
             try{
                 Map<String, Integer> currentKeyList = new HashMap<>();
@@ -52,7 +83,6 @@ public class Appendered extends Thread {
                         currentKeyList.put(keyTeam + keyPllx, i);
                     }
                 }
-
                 Map<String, Bet_Wb_Info> rsMap = BetNwbDeal.map;
                 Set<String> keySet = rsMap.keySet();
                 for (String key : keySet) {
@@ -63,8 +93,6 @@ public class Appendered extends Thread {
                         tableModel.setValueAt(info.getPk_bet(), rowIndex, 1);
                         tableModel.setValueAt(info.getPllx_bet(), rowIndex, 2);
                         tableModel.setValueAt(info.getPl_bet(), rowIndex, 3);
-
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
 
                         tableModel.setValueAt(this.getRandomString((int)(1+Math.random()*(7-1+1))), rowIndex, 4);
                         tableModel.setValueAt(info.getPk_wb(), rowIndex, 6);
@@ -79,7 +107,6 @@ public class Appendered extends Thread {
                         teamObj[1] = info.getPk_bet();
                         teamObj[2] = info.getPllx_bet();
                         teamObj[3] = info.getPl_bet();
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
                         teamObj[4] = this.getRandomString((int)(1+Math.random()*(7-1+1)));//simpleDateFormat.format(new Date());
                         teamObj[5] = info.getTeam_wb();
                         teamObj[6] = info.getPk_wb();

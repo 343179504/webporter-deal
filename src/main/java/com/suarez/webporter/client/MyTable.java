@@ -5,6 +5,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 import java.util.Vector;
 
 public class MyTable extends JTable {                       // 实现自己的表格类
@@ -34,5 +35,41 @@ public class MyTable extends JTable {                       // 实现自己的�
     // 重写JTable类的isCellEditable(int row, int column)方法
     public boolean isCellEditable(int row, int column) {                // 表格不可编辑
         return true;
+    }
+
+    /**
+     * 设置表格的某一行的背景色
+     * @param table
+     */
+    public static void setOneRowBackgroundColor(JTable table, int rowIndex,
+                                                Color color) {
+        try {
+            DefaultTableCellRenderer tcr = new DefaultTableCellRenderer() {
+
+                public Component getTableCellRendererComponent(JTable table,
+                                                               Object value, boolean isSelected, boolean hasFocus,
+                                                               int row, int column) {
+                    if (row == rowIndex) {
+                        setBackground(color);
+                        setForeground(Color.WHITE);
+                    } else if (row > rowIndex) {
+                        setBackground(Color.BLACK);
+                        setForeground(Color.WHITE);
+                    } else {
+                        setBackground(Color.BLACK);
+                        setForeground(Color.WHITE);
+                    }
+
+                    return super.getTableCellRendererComponent(table, value,
+                            isSelected, hasFocus, row, column);
+                }
+            };
+            int columnCount = table.getColumnCount();
+            for (int i = 0; i < columnCount; i++) {
+                table.getColumn(table.getColumnName(i)).setCellRenderer(tcr);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }
