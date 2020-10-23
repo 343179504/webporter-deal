@@ -172,7 +172,7 @@ public class BetNwbDeal implements Runnable {
 
     }
 
-    private String dealPoint(String point) {
+    public static String dealPoint(String point) {
         String realPoint = point;
         if (point.contains(".25") || point.contains(".75")) {
             double pointDouble = Double.parseDouble(point);

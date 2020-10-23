@@ -1,5 +1,6 @@
 package com.suarez.webporter.driver;
 
+import com.suarez.webporter.deal.BetNwbDeal;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -79,7 +80,7 @@ public class BetDriver {
                         //小球盘口
                         pkName = pkName.replace(",", "/");
                         pkName = pkName.replace(".0", "");
-
+                        pkName=BetNwbDeal.dealPoint(pkName);
                         if (pkName.equals(pankou)) {
                             pk_flag=true;
                             if ("大".equals(daxiaoqiu)) {
