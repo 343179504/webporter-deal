@@ -22,7 +22,7 @@ public class WebPhaser {
         Double sm_money = (big_pl + 1) * money / (sm_pl + big_pl + 2);
         Double big_money = money - sm_money;
         Double enrn_money = big_money * big_pl - sm_money;
-        if (big_money * big_pl - sm_money > -20) {
+        if (big_money * big_pl - sm_money > 0) {
             //存在收益
             resultInfo.setIsTrue(true);
             resultInfo.setBig_pl(String.valueOf(big_pl));

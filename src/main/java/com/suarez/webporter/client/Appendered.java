@@ -2,6 +2,7 @@ package com.suarez.webporter.client;
 
 import com.suarez.webporter.deal.BetNwbDeal;
 import com.suarez.webporter.deal.BetWbDeal;
+import com.suarez.webporter.deal.BetYzDeal;
 import com.suarez.webporter.deal.ResultInfo;
 import com.suarez.webporter.deal.bet_wb.Bet_Wb_Info;
 import com.suarez.webporter.util.SpringBeanUtil;
@@ -73,11 +74,7 @@ public class Appendered extends Thread {
 //        Map<String, Bet_Wb_Info> rsMap = BetNwbDeal.map;
 //        rsMap=this.getTestData();
         music = new Music();
-        try {
-            music.music();
-        } catch (IOException e) {
 
-        }
 
         while (true) {
             try{
@@ -91,7 +88,7 @@ public class Appendered extends Thread {
                         currentKeyList.put(keyTeam + keyPllx, i);
                     }
                 }
-                Map<String, Bet_Wb_Info> rsMap = BetNwbDeal.map;
+                Map<String, Bet_Wb_Info> rsMap = BetYzDeal.map;
                 Set<String> keySet = rsMap.keySet();
                 for (String key : keySet) {
                     Bet_Wb_Info info = rsMap.get(key);
@@ -109,6 +106,11 @@ public class Appendered extends Thread {
                         tableModel.setValueAt(info.getEnrn_money(), rowIndex, 9);
                         //table.setModel(tableModel);
                     } else {
+                        try {
+                            music.music();
+                        } catch (IOException e) {
+
+                        }
                         music.Start();
                         //TODO 新增
                         Object[] teamObj = new Object[11];

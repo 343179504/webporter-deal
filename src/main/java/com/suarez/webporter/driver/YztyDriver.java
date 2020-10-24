@@ -61,63 +61,72 @@ public class YztyDriver {
 
         for (int i = 0; i < teamList.size(); i++) {
             WebElement team = teamList.get(i);
-            if (null != team) {
-                //获取盘口列表
-                List<WebElement> teamNameDiv = team.findElements(By.className("multiOdds"));
-                if (teamNameDiv.size() != 0) {
-                    //获取第一个盘口，通过第一个盘口获取队名
-                    WebElement firstPanKouElement = teamNameDiv.get(0);
-                    WebElement spanElement = firstPanKouElement.findElement(By.tagName("span"));
-                    if(null==spanElement){
-                        continue;
-                    }
-                    //主队名称
-                    String zhudui = spanElement.getAttribute("innerHTML").trim();
-                    if (name.equals(zhudui)) {
-                        flag=true;
-                        List<WebElement> pankouList = firstPanKouElement.findElements(By.className("odds")).get(1).findElements(By.className("betArea"));
-                        if (pankouList.size() > 1) {
-                            WebElement dqElement = pankouList.get(0);
-                            WebElement xqElement = pankouList.get(1);
-                            String dqpkName = dqElement.findElement(By.className("txt")).getAttribute("innerHTML").trim();
-//                            String dqpkName = dqPkTmp.split(" ")[1];
-                            if (dqpkName.equals(pankou)) {
-                                pk_flag=true;
-                                if ("大".equals(daxiaoqiu)) {
-                                    dxq_flag=true;
+            try{
+                if (null != team) {
+                    //获取盘口列表
+                    List<WebElement> teamNameDiv = team.findElements(By.className("multiOdds"));
+                    if (teamNameDiv.size() != 0) {
+                        //获取第一个盘口，通过第一个盘口获取队名
+                        WebElement firstPanKouElement = teamNameDiv.get(0);
+                        List<WebElement> spanElementList = firstPanKouElement.findElements(By.tagName("span"));
+                        if(spanElementList.size()==0){
+                            continue;
+                        }
+                        //主队名称
+                        String zhudui = spanElementList.get(0).getAttribute("innerHTML").trim();
+                        if (name.equals(zhudui)) {
+                            flag=true;
+                            List<WebElement> pankouList = firstPanKouElement.findElements(By.className("odds"));
+                            if (pankouList.size() > 1) {
+                                WebElement element = pankouList.get(1);
+
+                                WebElement dqElement = element.findElements(By.className("betArea")).get(0);
+                                WebElement xqElement = element.findElements(By.className("betArea")).get(1);
+                                List<WebElement> dqSpanList = dqElement.findElements(By.tagName("span"));
+
+                                String dqpkName = dqSpanList.get(0).getAttribute("innerHTML").trim();
+                                pankou = pankou.replace(".0","");
+                                if (dqpkName.equals(pankou)) {
+                                    pk_flag=true;
+                                    if ("大".equals(daxiaoqiu)) {
+                                        dxq_flag=true;
 //                                    setAttribuate(dqElement, "style", "background:#efce06;font-size:25px!important;padding:5px;color:red");
-                                    WebElement dqPl = dqElement.findElements(By.tagName("span")).get(1);
+                                        WebElement dqPl = dqElement.findElements(By.tagName("span")).get(1);
 //                                    action.click(dqPl).perform();
 //                                    dqPl.click();
-                                    try{
-                                        dqPl.click();
-                                    }catch (Exception e){
-                                        action.click(dqPl).perform();
-                                    }
+                                        try{
+                                            dqPl.click();
+                                        }catch (Exception e){
+                                            action.click(dqPl).perform();
+                                        }
 
-                                } else if ("小".equals(daxiaoqiu)) {
-                                    dxq_flag=true;
+                                    } else if ("小".equals(daxiaoqiu)) {
+                                        dxq_flag=true;
 //                                    setAttribuate(xqElement, "style", "background:#efce06;font-size:25px!important;padding:5px;color:red");
-                                    WebElement xpPl = xqElement.findElements(By.className("span")).get(1);
-                                    try{
-                                        xpPl.click();
-                                    }catch (Exception e){
-                                        action.click(xpPl).perform();
+                                        WebElement xpPl = xqElement.findElements(By.tagName("span")).get(1);
+                                        try{
+                                            xpPl.click();
+                                        }catch (Exception e){
+                                            action.click(xpPl).perform();
 
+                                        }
                                     }
+                                    break;
                                 }
-                                break;
                             }
-                        }
 
+
+                        }
+                    }else{
+                        JOptionPane.showMessageDialog(null, "队名没有获取到.", "提示", JOptionPane.INFORMATION_MESSAGE);
 
                     }
-                }else{
-                    JOptionPane.showMessageDialog(null, "队名没有获取到.", "提示", JOptionPane.INFORMATION_MESSAGE);
 
                 }
+            }catch(Exception e){
 
             }
+
         }
         if(!flag){
             JOptionPane.showMessageDialog(null, "没有找到匹配的队伍.", "提示", JOptionPane.INFORMATION_MESSAGE);

@@ -38,7 +38,7 @@ public class PhaserApplication {
 //        NwbDriver nwbDriver = (NwbDriver) acx.getBean("nwbDriver");
 //        nwbDriver.init();
 
-		YztyDriver yztyDriver = (YztyDriver) acx.getBean("betDriver");
+		YztyDriver yztyDriver = (YztyDriver) acx.getBean("yztyDriver");
 		yztyDriver.init();
 
         BetDriver betDriver = (BetDriver) acx.getBean("betDriver");
