@@ -3,9 +3,11 @@ package com.suarez.webporter;
 import com.suarez.webporter.client.ConfigFrame;
 import com.suarez.webporter.deal.BetNwbDeal;
 import com.suarez.webporter.deal.BetWbDeal;
+import com.suarez.webporter.deal.BetYzDeal;
 import com.suarez.webporter.driver.BetDriver;
 import com.suarez.webporter.driver.NwbDriver;
 import com.suarez.webporter.driver.WbDriver;
+import com.suarez.webporter.driver.YztyDriver;
 import com.suarez.webporter.util.SpringBeanUtil;
 import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;
@@ -33,13 +35,20 @@ public class PhaserApplication {
 //		BetWbDeal deal = (BetWbDeal) acx.getBean("betWbDeal");
 //		Thread t = new Thread(deal);
 //		t.start();
-        NwbDriver nwbDriver = (NwbDriver) acx.getBean("nwbDriver");
-        nwbDriver.init();
+//        NwbDriver nwbDriver = (NwbDriver) acx.getBean("nwbDriver");
+//        nwbDriver.init();
+
+		YztyDriver yztyDriver = (YztyDriver) acx.getBean("betDriver");
+		yztyDriver.init();
 
         BetDriver betDriver = (BetDriver) acx.getBean("betDriver");
         betDriver.init();
 
-		BetNwbDeal deal = (BetNwbDeal) acx.getBean("betNwbDeal");
+//		BetNwbDeal deal = (BetNwbDeal) acx.getBean("betNwbDeal");
+//		Thread t = new Thread(deal);
+//		t.start();
+
+		BetYzDeal deal = (BetYzDeal) acx.getBean("betYzDeal");
 		Thread t = new Thread(deal);
 		t.start();
 

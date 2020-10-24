@@ -21,4 +21,7 @@ public class WebporterConfig {
     @Value("${webdriver.chrome.listen.address.nwb}")
     private String nwb_listenAddress;
 
+    @Value("${webdriver.chrome.listen.address.yzty}")
+    private String yzty_listenAddress;
+
 }
