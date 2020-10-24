@@ -80,14 +80,24 @@ public class NwbDriver {
                                     dxq_flag=true;
 //                                    setAttribuate(dqElement, "style", "background:#efce06;font-size:25px!important;padding:5px;color:red");
                                     WebElement dqPl = dqElement.findElements(By.className("odds")).get(0);
-                                    action.click(dqPl).perform();
+//                                    action.click(dqPl).perform();
+//                                    dqPl.click();
+                                    try{
+                                        dqPl.click();
+                                    }catch (Exception e){
+                                        action.click(dqPl).perform();
+                                    }
 
                                 } else if ("小".equals(daxiaoqiu)) {
                                     dxq_flag=true;
 //                                    setAttribuate(xqElement, "style", "background:#efce06;font-size:25px!important;padding:5px;color:red");
                                     WebElement xpPl = xqElement.findElements(By.className("odds")).get(0);
-                                    action.click(xpPl).perform();
-//                                dxqPl.click();
+                                    try{
+                                        xpPl.click();
+                                    }catch (Exception e){
+                                        action.click(xpPl).perform();
+
+                                    }
                                 }
                                 break;
                             }

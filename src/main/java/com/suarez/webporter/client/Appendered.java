@@ -9,6 +9,7 @@ import com.suarez.webporter.util.SpringBeanUtil;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import java.io.IOException;
 import java.io.PipedReader;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -19,6 +20,7 @@ public class Appendered extends Thread {
     JTextArea textArea;
     JTable table;
     JScrollPane scroll;
+    Music music;
 
     public Appendered(JTable table) {
         this.table = table;
@@ -67,9 +69,15 @@ public class Appendered extends Thread {
         return sb.toString();
     }
     public void run() {
+
 //        Map<String, Bet_Wb_Info> rsMap = BetNwbDeal.map;
-//
 //        rsMap=this.getTestData();
+        music = new Music();
+        try {
+            music.music();
+        } catch (IOException e) {
+
+        }
 
         while (true) {
             try{
@@ -101,6 +109,7 @@ public class Appendered extends Thread {
                         tableModel.setValueAt(info.getEnrn_money(), rowIndex, 9);
                         //table.setModel(tableModel);
                     } else {
+                        music.Start();
                         //TODO 新增
                         Object[] teamObj = new Object[11];
                         teamObj[0] = info.getTeam_bet();

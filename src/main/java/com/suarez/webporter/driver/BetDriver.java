@@ -80,21 +80,29 @@ public class BetDriver {
                         //小球盘口
                         pkName = pkName.replace(",", "/");
                         pkName = pkName.replace(".0", "");
-                        pkName=BetNwbDeal.dealPoint(pkName);
+//                        pkName=BetNwbDeal.dealPoint(pkName);
                         if (pkName.equals(pankou)) {
                             pk_flag=true;
                             if ("大".equals(daxiaoqiu)) {
                                 dxq_flag=true;
-//                                setAttribuate(dqPk, "style", "background:#efce06;font-size:25px!important;padding:5px;color:red");
+//                              setAttribuate(dqPk, "style", "background:#efce06;font-size:25px!important;padding:5px;color:red");
                                 WebElement dqPl = plList.get(0);
-                                action.click(dqPl).perform();
+                                try{
+                                    dqPl.click();
+                                }catch (Exception e){
+                                    action.click(dqPl).perform();
+                                }
 
                             } else if ("小".equals(daxiaoqiu)) {
                                 dxq_flag=true;
-//                                setAttribuate(xqPk, "style", "background:#efce06;font-size:25px!important;padding:5px;color:red");
-                                WebElement dxqPl = plList.get(1);
-                                action.click(dxqPl).perform();
-//                                dxqPl.click();
+                                WebElement xqPl = plList.get(1);
+                                try{
+                                    xqPl.click();
+                                }catch (Exception e){
+                                    action.click(xqPl).perform();
+//                                    setAttribuate(xqPk, "style", "background:#efce06;font-size:25px!important;padding:5px;color:red");
+
+                                }
                             }
 
                             break;
