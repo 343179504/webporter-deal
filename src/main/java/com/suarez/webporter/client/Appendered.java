@@ -71,8 +71,8 @@ public class Appendered extends Thread {
     }
     public void run() {
 
-        Map<String, Bet_Wb_Info> rsMap = BetNwbDeal.map;
-        rsMap=this.getTestData();
+//        Map<String, Bet_Wb_Info> rsMap = BetNwbDeal.map;
+//        rsMap=this.getTestData();
         music = new Music();
 
 
@@ -88,7 +88,7 @@ public class Appendered extends Thread {
                         currentKeyList.put(keyTeam + keyPllx, i);
                     }
                 }
-//                Map<String, Bet_Wb_Info> rsMap = BetYzDeal.map;
+                Map<String, Bet_Wb_Info> rsMap = BetYzDeal.map;
                 Set<String> keySet = rsMap.keySet();
                 for (String key : keySet) {
                     Bet_Wb_Info info = rsMap.get(key);
@@ -135,7 +135,7 @@ public class Appendered extends Thread {
                 }
 
             }catch(Exception e){
-                rsMap=this.getTestData();
+//                rsMap=this.getTestData();
 
                 e.printStackTrace();
             }
