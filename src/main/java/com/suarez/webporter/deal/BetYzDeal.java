@@ -66,6 +66,7 @@ public class BetYzDeal implements Runnable {
         TeamInfo teamInfoBet = gson.fromJson(betStr, TeamInfo.class);
         String keyBet = teamInfoBet.getKeyName();
         List<DataInfo> infoListBet = teamInfoBet.getInfo();
+        System.out.println("key==="+teamInfoBet.getKeyName());
 
         TeamInfo teamInfoWb = gson.fromJson(wbStr, TeamInfo.class);
         String keyWb = teamInfoWb.getKeyName();
@@ -83,6 +84,7 @@ public class BetYzDeal implements Runnable {
                 ResultInfo resultInfo_big = WebPhaser.webpoterPhase(1000, keyBet,
                         Double.valueOf(dataInfoBet.getBig_pl()),
                         Double.valueOf(dataInfoWb.getSm_pl()), pointWb);
+
                 if (resultInfo_big.getIsTrue()) {
                     //推送消息
                     Bet_Wb_Info info = new Bet_Wb_Info();

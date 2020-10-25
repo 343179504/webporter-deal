@@ -46,6 +46,26 @@ public class ConfigDB {
         // URL
         panel.add(cf.buildJLabel("小球金额：", 1030, y0 + 40, 80, 25));
         xqjeTextField = cf.buildJTextField(xqjeTextField, xqje, "xqje", 20, 1100, y0 + 40, 80, 25);
+        xqjeTextField.getDocument().addDocumentListener(new DocumentListener(){
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String text = null;
+                try {
+                    text = e.getDocument().getText(e.getDocument().getStartPosition().getOffset(), e.getDocument().getLength());
+                } catch (BadLocationException ex) {
+                    ex.printStackTrace();
+                }
+                activeEvent();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
         panel.add(xqjeTextField);
 
         panel.add(cf.buildJLabel("小球赔率：", 1030, y0 + 70, 80, 25));

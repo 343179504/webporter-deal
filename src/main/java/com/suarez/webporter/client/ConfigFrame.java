@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 import javax.swing.*;
 import java.awt.*;
 
-public class ConfigFrame {
+public class ConfigFrame implements Runnable{
     private final static Logger logger = Logger.getLogger(ConfigFrame.class);
 
     public static void show() {
@@ -77,4 +77,8 @@ public class ConfigFrame {
     }
 
 
+    @Override
+    public void run() {
+
+    }
 }

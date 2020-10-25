@@ -39,13 +39,13 @@ public class Appendered extends Thread {
         Bet_Wb_Info info = new Bet_Wb_Info();
         info.setIsTrue(true);
         //设置bet信息
-        info.setTeam_bet("000");
+        info.setTeam_bet("富川FC");
         info.setPk_bet("2.5");
         info.setPllx_bet("大");
         info.setPl_bet("1");
         info.setMoney_bet("100");
         //设置wb信息
-        info.setTeam_wb("111");
+        info.setTeam_wb("富川FC");
         info.setPk_wb("2.5");
         info.setPllx_wb("小");
         info.setPl_wb("2.1");
@@ -71,8 +71,8 @@ public class Appendered extends Thread {
     }
     public void run() {
 
-//        Map<String, Bet_Wb_Info> rsMap = BetNwbDeal.map;
-//        rsMap=this.getTestData();
+        Map<String, Bet_Wb_Info> rsMap = BetNwbDeal.map;
+        rsMap=this.getTestData();
         music = new Music();
 
 
@@ -88,7 +88,7 @@ public class Appendered extends Thread {
                         currentKeyList.put(keyTeam + keyPllx, i);
                     }
                 }
-                Map<String, Bet_Wb_Info> rsMap = BetYzDeal.map;
+//                Map<String, Bet_Wb_Info> rsMap = BetYzDeal.map;
                 Set<String> keySet = rsMap.keySet();
                 for (String key : keySet) {
                     Bet_Wb_Info info = rsMap.get(key);
@@ -135,6 +135,8 @@ public class Appendered extends Thread {
                 }
 
             }catch(Exception e){
+                rsMap=this.getTestData();
+
                 e.printStackTrace();
             }
 
