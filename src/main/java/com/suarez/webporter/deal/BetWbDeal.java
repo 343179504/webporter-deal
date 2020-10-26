@@ -15,13 +15,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Data
-@Component
-public class BetWbDeal implements Runnable {
-    @Autowired
-    private RedisUtil redisUtil;
-
-    public static Map<String, Bet_Wb_Info> map = new ConcurrentHashMap<>();
-
+public class BetWbDeal extends BasicDeal {
 
     public void begin() {
         while (true) {
@@ -78,9 +72,9 @@ public class BetWbDeal implements Runnable {
             String pointWb = dataInfoWb.getPoint();
             DataInfo dataInfoBet = mapBet.get(pointWb);
             if (dataInfoBet != null) {
-                ResultInfo resultInfo_big = WebPhaser.webpoterPhase(1000, keyBet,
+                ResultInfo resultInfo_big = WebPhaser.webpoterPhase(dealConfig.getWebpoterPhaseMoney(), keyBet,
                         Double.valueOf(dataInfoBet.getBig_pl()),
-                        Double.valueOf(dataInfoWb.getSm_pl()), pointWb);
+                        Double.valueOf(dataInfoWb.getSm_pl()), pointWb,dealConfig.getWebpoterPhaseEarnMoney());
                 if (resultInfo_big.getIsTrue()) {
                     //推送消息
                     Bet_Wb_Info info = new Bet_Wb_Info();
@@ -107,9 +101,9 @@ public class BetWbDeal implements Runnable {
                 }
 
                 //bet-小 wb-大
-                ResultInfo resultInfo_sm = WebPhaser.webpoterPhase(1000, keyWb,
+                ResultInfo resultInfo_sm = WebPhaser.webpoterPhase(dealConfig.getWebpoterPhaseMoney(), keyWb,
                         Double.valueOf(dataInfoBet.getSm_pl()),
-                        Double.valueOf(dataInfoWb.getBig_pl()), pointWb);
+                        Double.valueOf(dataInfoWb.getBig_pl()), pointWb,dealConfig.getWebpoterPhaseEarnMoney());
                 //TODO 推送消息
                 if (resultInfo_sm.getIsTrue()) {
                     //推送消息

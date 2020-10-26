@@ -124,29 +124,28 @@ public class ConfigPrint {
 //            }
 //        });
 //        panel.add(wbButton);
-        JButton betButton = cf.buildJButton("Bet", 1115, y0 + 210, 80, 25);
-        betButton.addActionListener(new ActionListener(){//添加事件
-            public void actionPerformed(ActionEvent e){
-                int selectedRow = table.getSelectedRow();//获得选中行的索引
-                if(selectedRow!= -1)   //是否存在选中行
-                {
-                    //获取选中球队万博数据：
-                    String name = (String) table.getModel().getValueAt(selectedRow,0);
-                    String pankou = (String) table.getModel().getValueAt(selectedRow,1);
-                    String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow,2);
-                    BetDriver betDriver = (BetDriver) SpringBeanUtil.getBean("betDriver");
-                    String[] nameArray = name.split("_");
-                    String name_z = nameArray[0];
-                    betDriver.focusOn(name_z,pankou,daxiaoqiu);
+        JButton betButton = ConfigFrame.buildJButton("Bet", 1115, y0 + 210, 80, 25);
+        //添加事件
+        betButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();//获得选中行的索引
+            if(selectedRow!= -1)   //是否存在选中行
+            {
+                //获取选中球队万博数据：
+                String name = (String) table.getModel().getValueAt(selectedRow,0);
+                String pankou = (String) table.getModel().getValueAt(selectedRow,1);
+                String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow,2);
+                BetDriver betDriver = (BetDriver) SpringBeanUtil.getBean("betDriver");
+                String[] nameArray = name.split("_");
+                String name_z = nameArray[0];
+                betDriver.focusOn(name_z,pankou,daxiaoqiu);
 
-                }
             }
         });
         panel.add(betButton);
         JScrollPane logTextArea = new JScrollPane(table);
 
          //添加按钮，绑定事件监听
-        JButton clearButton = cf.buildJButton("清除", 1030, y0 + 210, 80, 25);
+        JButton clearButton = ConfigFrame.buildJButton("清除", 1030, y0 + 210, 80, 25);
         addActionListener(clearButton);
 
         panel.add(clearButton);
@@ -167,12 +166,7 @@ public class ConfigPrint {
     // 为按钮绑定监听
     private void addActionListener(JButton saveButton) {
         saveButton.addActionListener(
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        activeEvent();
-                    }
-                });
+                e -> activeEvent());
 
     }
 

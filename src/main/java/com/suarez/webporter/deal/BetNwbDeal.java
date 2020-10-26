@@ -19,13 +19,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Data
-@Component
-public class BetNwbDeal implements Runnable {
-    @Autowired
-    private RedisUtil redisUtil;
-
-    public static Map<String, Bet_Wb_Info> map = new ConcurrentHashMap<>();
-
+public class BetNwbDeal extends BasicDeal {
 
     public void begin() {
         while (true) {
@@ -84,9 +78,9 @@ public class BetNwbDeal implements Runnable {
             pointNwb = dealPoint(pointNwb);
             DataInfo dataInfoBet = mapBet.get(pointNwb);
             if (dataInfoBet != null) {
-                ResultInfo resultInfo_big = WebPhaser.webpoterPhase(1000, keyBet,
+                ResultInfo resultInfo_big = WebPhaser.webpoterPhase(dealConfig.getWebpoterPhaseMoney(), keyBet,
                         Double.valueOf(dataInfoBet.getBig_pl()),
-                        Double.valueOf(dataInfoNwb.getSm_pl()), pointNwb);
+                        Double.valueOf(dataInfoNwb.getSm_pl()), pointNwb, dealConfig.getWebpoterPhaseEarnMoney());
                 if (resultInfo_big.getIsTrue()) {
                     //推送消息
                     Bet_Wb_Info info = new Bet_Wb_Info();
@@ -113,9 +107,9 @@ public class BetNwbDeal implements Runnable {
                 }
 
                 //bet-小 wb-大
-                ResultInfo resultInfo_sm = WebPhaser.webpoterPhase(1000, keyWb,
+                ResultInfo resultInfo_sm = WebPhaser.webpoterPhase(dealConfig.getWebpoterPhaseMoney(), keyWb,
                         Double.valueOf(dataInfoBet.getSm_pl()),
-                        Double.valueOf(dataInfoNwb.getBig_pl()), pointNwb);
+                        Double.valueOf(dataInfoNwb.getBig_pl()), pointNwb, dealConfig.getWebpoterPhaseEarnMoney());
                 //TODO 推送消息
                 if (resultInfo_sm.getIsTrue()) {
                     //推送消息
@@ -193,7 +187,7 @@ public class BetNwbDeal implements Runnable {
         if (((int) number * 1000) == (int) (number * 1000)) {
             //如果是一个整数
             numberStr = String.valueOf((int) number);
-        }else{
+        } else {
             numberStr = String.valueOf(number);
         }
         return numberStr;

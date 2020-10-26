@@ -1,7 +1,6 @@
 package com.suarez.webporter.deal;
 
 
-
 /**
  * Created by feng on 2020/10/11.
  */
@@ -10,19 +9,20 @@ public class WebPhaser {
     /**
      * 计算当前赔率是否存在收益
      *
-     * @param money  本金
-     * @param team   比赛场次
-     * @param big_pl 大球赔率
-     * @param sm_pl  小球赔率
-     * @param pk     盘口
+     * @param money     本金
+     * @param team      比赛场次
+     * @param big_pl    大球赔率
+     * @param sm_pl     小球赔率
+     * @param pk        盘口
+     * @param earnMoney 盈利阈值
      * @return 返回结果
      */
-    public static ResultInfo webpoterPhase(int money, String team, Double big_pl, Double sm_pl, String pk) {
+    public static ResultInfo webpoterPhase(int money, String team, Double big_pl, Double sm_pl, String pk, int earnMoney) {
         ResultInfo resultInfo = new ResultInfo();
         Double sm_money = (big_pl + 1) * money / (sm_pl + big_pl + 2);
         Double big_money = money - sm_money;
         Double enrn_money = big_money * big_pl - sm_money;
-        if (big_money * big_pl - sm_money > 0) {
+        if (big_money * big_pl - sm_money > earnMoney) {
             //存在收益
             resultInfo.setIsTrue(true);
             resultInfo.setBig_pl(String.valueOf(big_pl));
@@ -58,7 +58,7 @@ public class WebPhaser {
 
 
     public static void main(String[] args) {
-        ResultInfo resultInfo = webpoterPhase(2500, "test", 1.05, 1.06, "0.5");
+        ResultInfo resultInfo = webpoterPhase(2500, "test", 1.05, 1.06, "0.5",0);
         System.out.println("是否满足收益条件:" + resultInfo.getIsTrue());
         if (resultInfo.getIsTrue()) {
             String rsStr = "场次:" + resultInfo.getTeam() + "盘口:" + resultInfo.getPk() +

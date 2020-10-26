@@ -1,9 +1,6 @@
 package com.suarez.webporter.client;
 
-import com.suarez.webporter.deal.BetNwbDeal;
-import com.suarez.webporter.deal.BetWbDeal;
-import com.suarez.webporter.deal.BetYzDeal;
-import com.suarez.webporter.deal.ResultInfo;
+import com.suarez.webporter.deal.*;
 import com.suarez.webporter.deal.bet_wb.Bet_Wb_Info;
 import com.suarez.webporter.util.SpringBeanUtil;
 
@@ -88,7 +85,7 @@ public class Appendered extends Thread {
                         currentKeyList.put(keyTeam + keyPllx, i);
                     }
                 }
-                Map<String, Bet_Wb_Info> rsMap = BetYzDeal.map;
+                Map<String, Bet_Wb_Info> rsMap = BasicDeal.map;
                 Set<String> keySet = rsMap.keySet();
                 for (String key : keySet) {
                     Bet_Wb_Info info = rsMap.get(key);

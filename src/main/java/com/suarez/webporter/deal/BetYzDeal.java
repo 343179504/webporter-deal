@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.suarez.webporter.deal.bet_wb.Bet_Wb_Info;
 import com.suarez.webporter.domain.DataInfo;
+import com.suarez.webporter.domain.MatchTeam;
 import com.suarez.webporter.domain.TeamInfo;
 import com.suarez.webporter.util.RedisUtil;
 import com.suarez.webporter.util.Util;
@@ -17,13 +18,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Data
-@Component
-public class BetYzDeal implements Runnable {
-    @Autowired
-    private RedisUtil redisUtil;
-
-    public static Map<String, Bet_Wb_Info> map = new ConcurrentHashMap<>();
-
+public class BetYzDeal extends BasicDeal {
 
     public void begin() {
         while (true) {
@@ -66,11 +61,18 @@ public class BetYzDeal implements Runnable {
         TeamInfo teamInfoBet = gson.fromJson(betStr, TeamInfo.class);
         String keyBet = teamInfoBet.getKeyName();
         List<DataInfo> infoListBet = teamInfoBet.getInfo();
-        System.out.println("key==="+teamInfoBet.getKeyName());
 
         TeamInfo teamInfoWb = gson.fromJson(wbStr, TeamInfo.class);
         String keyWb = teamInfoWb.getKeyName();
         List<DataInfo> infoListWb = teamInfoWb.getInfo();
+
+        //记录匹配比赛
+        String matchKey = "match:" + teamInfoBet.getKeyName() + " || " + teamInfoWb.getKeyName();
+        MatchTeam matchTeam = new MatchTeam();
+        matchTeam.setKey(matchKey);
+        matchTeam.setTeam_One(teamInfoBet.getKeyName());
+        matchTeam.setTeam_Two(teamInfoWb.getKeyName());
+        redisUtil.set(matchKey,new Gson().toJson(matchTeam));
 
         Map<String, DataInfo> mapBet = Maps.newHashMap();
         for (DataInfo dataInfoBet : infoListBet) {
@@ -81,9 +83,9 @@ public class BetYzDeal implements Runnable {
             String pointWb = dataInfoWb.getPoint();
             DataInfo dataInfoBet = mapBet.get(pointWb);
             if (dataInfoBet != null) {
-                ResultInfo resultInfo_big = WebPhaser.webpoterPhase(1000, keyBet,
+                ResultInfo resultInfo_big = WebPhaser.webpoterPhase(dealConfig.getWebpoterPhaseMoney(), keyBet,
                         Double.valueOf(dataInfoBet.getBig_pl()),
-                        Double.valueOf(dataInfoWb.getSm_pl()), pointWb);
+                        Double.valueOf(dataInfoWb.getSm_pl()), pointWb,dealConfig.getWebpoterPhaseEarnMoney());
 
                 if (resultInfo_big.getIsTrue()) {
                     //推送消息
@@ -111,9 +113,9 @@ public class BetYzDeal implements Runnable {
                 }
 
                 //bet-小 wb-大
-                ResultInfo resultInfo_sm = WebPhaser.webpoterPhase(1000, keyWb,
+                ResultInfo resultInfo_sm = WebPhaser.webpoterPhase(dealConfig.getWebpoterPhaseMoney(), keyWb,
                         Double.valueOf(dataInfoBet.getSm_pl()),
-                        Double.valueOf(dataInfoWb.getBig_pl()), pointWb);
+                        Double.valueOf(dataInfoWb.getBig_pl()), pointWb,dealConfig.getWebpoterPhaseEarnMoney());
                 //TODO 推送消息
                 if (resultInfo_sm.getIsTrue()) {
                     //推送消息
