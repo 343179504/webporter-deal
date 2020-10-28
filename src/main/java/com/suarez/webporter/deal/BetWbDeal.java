@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.suarez.webporter.deal.bet_wb.Bet_Wb_Info;
 import com.suarez.webporter.domain.DataInfo;
+import com.suarez.webporter.domain.MatchTeam;
 import com.suarez.webporter.domain.TeamInfo;
 import com.suarez.webporter.util.RedisUtil;
 import com.suarez.webporter.util.Util;
@@ -15,12 +16,13 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Data
+@Component
 public class BetWbDeal extends BasicDeal {
 
     public void begin() {
         while (true) {
             try {
-                Set<String> Wbkeys = redisUtil.keysByPre("wb");
+                Set<String> Wbkeys = redisUtil.keysByPre("oz");
                 Set<String> Betkeys = redisUtil.keysByPre("bet");
                 for (String betkey : Betkeys) {
                     float maxSimilarity = 0;
@@ -32,7 +34,7 @@ public class BetWbDeal extends BasicDeal {
                             tmp_keyName = wbkey;
                         }
                     }
-                    if (maxSimilarity > 0.4) {
+                    if (maxSimilarity > 0.3) {
                         //分析
                         deal(redisUtil.get(betkey), redisUtil.get(tmp_keyName));
                     } else {
@@ -62,6 +64,14 @@ public class BetWbDeal extends BasicDeal {
         TeamInfo teamInfoWb = gson.fromJson(wbStr, TeamInfo.class);
         String keyWb = teamInfoWb.getKeyName();
         List<DataInfo> infoListWb = teamInfoWb.getInfo();
+
+        //记录匹配比赛
+        String matchKey = "match:" + teamInfoBet.getKeyName() + " || " + teamInfoWb.getKeyName();
+        MatchTeam matchTeam = new MatchTeam();
+        matchTeam.setKey(matchKey);
+        matchTeam.setTeam_One(teamInfoBet.getKeyName());
+        matchTeam.setTeam_Two(teamInfoWb.getKeyName());
+        redisUtil.set(matchKey,new Gson().toJson(matchTeam));
 
         Map<String, DataInfo> mapBet = Maps.newHashMap();
         for (DataInfo dataInfoBet : infoListBet) {

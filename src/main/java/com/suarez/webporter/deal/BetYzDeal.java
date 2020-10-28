@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Data
+@Component
 public class BetYzDeal extends BasicDeal {
 
     public void begin() {

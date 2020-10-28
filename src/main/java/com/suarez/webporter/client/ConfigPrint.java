@@ -1,10 +1,7 @@
 package com.suarez.webporter.client;
 
 
-import com.suarez.webporter.driver.BetDriver;
-import com.suarez.webporter.driver.NwbDriver;
-import com.suarez.webporter.driver.WbDriver;
-import com.suarez.webporter.driver.YztyDriver;
+import com.suarez.webporter.driver.*;
 import com.suarez.webporter.util.SpringBeanUtil;
 import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
@@ -95,10 +92,10 @@ public class ConfigPrint {
                         String name = (String) table.getModel().getValueAt(selectedRow,5);
                         String pankou = (String) table.getModel().getValueAt(selectedRow,6);
                         String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow,7);
-                        YztyDriver yztyDriver = (YztyDriver) SpringBeanUtil.getBean("yztyDriver");
+                        OzDriver ozDriver = (OzDriver) SpringBeanUtil.getBean("ozDriver");
                         String[] nameArray = name.split("_");
                         String name_z = nameArray[0];
-                        yztyDriver.focusOn(name_z,pankou,daxiaoqiu);
+                        ozDriver.focusOn(name_z,pankou,daxiaoqiu);
                     }
 
                 }
