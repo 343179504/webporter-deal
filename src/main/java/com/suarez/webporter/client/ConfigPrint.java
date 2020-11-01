@@ -74,45 +74,45 @@ public class ConfigPrint {
 //        table.getColumnModel().getColumn(11).setCellRenderer(new MyButtonRender());//设置列按钮
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  //单选
         table.addMouseListener(new MouseAdapter() {
-                                   public void mouseClicked(MouseEvent e) {
-                                       int rowI = table.rowAtPoint(e.getPoint());// 得到table的行号
-                                       int columnI = table.columnAtPoint(e.getPoint());// 得到table的列号
-                                       System.out.println("rowI" + rowI + " " + "columnI" + columnI);
+            public void mouseClicked(MouseEvent e) {
+                int rowI = table.rowAtPoint(e.getPoint());// 得到table的行号
+                int columnI = table.columnAtPoint(e.getPoint());// 得到table的列号
+                System.out.println("rowI" + rowI + " " + "columnI" + columnI);
 
-                                       if (rowI > -1 && columnI > -1) {
-                                           int selectedRow = table.getSelectedRow();//获得选中行的索引
-                                           if (1 == columnI) {//点击bet队名
-                                               //获取选中球队bet数据：
-                                               String name = (String) table.getModel().getValueAt(selectedRow, 0);
-                                               String pankou = (String) table.getModel().getValueAt(selectedRow, 1);
-                                               String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow, 2);
-                                               BetDriver betDriver = (BetDriver) SpringBeanUtil.getBean("betDriver");
-                                               String[] nameArray = name.split("_");
-                                               String name_z = nameArray[0];
-                                               //异步执行
-                                               cachedThreadPool.submit(() -> {
-                                                   betDriver.focusOn(name_z, pankou, daxiaoqiu);
-                                               });
-                                           }
-                                               if (6 == columnI) {//点击wb队名
-                                                   //获取选中球队万博数据：
-                                                   String name = (String) table.getModel().getValueAt(selectedRow, 5);
-                                                   String pankou = (String) table.getModel().getValueAt(selectedRow, 6);
-                                                   String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow, 7);
-                                                   OzDriver yzDriver = (OzDriver) SpringBeanUtil.getBean("yzDriver");
-                                                   String[] nameArray = name.split("_");
-                                                   String name_z = nameArray[0];
-                                                   //异步执行
-                                                   cachedThreadPool.submit(() -> {
-                                                       yzDriver.focusOn(name_z, pankou, daxiaoqiu);
-                                                   });
-                                               }
+                if (rowI > -1 && columnI > -1) {
+                    int selectedRow = table.getSelectedRow();//获得选中行的索引
+                    if (1 == columnI) {//点击bet队名
+                        //获取选中球队bet数据：
+                        String name = (String) table.getModel().getValueAt(selectedRow, 0);
+                        String pankou = (String) table.getModel().getValueAt(selectedRow, 1);
+                        String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow, 2);
+                        BetDriver betDriver = (BetDriver) SpringBeanUtil.getBean("betDriver");
+                        String[] nameArray = name.split("_");
+                        String name_z = nameArray[0];
+                        //异步执行
+                        cachedThreadPool.submit(() -> {
+                            betDriver.focusOn(name_z, pankou, daxiaoqiu);
+                        });
+                    }
+                    if (6 == columnI) {//点击wb队名
+                        //获取选中球队万博数据：
+                        String name = (String) table.getModel().getValueAt(selectedRow, 5);
+                        String pankou = (String) table.getModel().getValueAt(selectedRow, 6);
+                        String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow, 7);
+                        YztyDriver yztyDriver = (YztyDriver) SpringBeanUtil.getBean("yztyDriver");
+                        String[] nameArray = name.split("_");
+                        String name_z = nameArray[0];
+                        //异步执行
+                        cachedThreadPool.submit(() -> {
+                            yztyDriver.focusOn(name_z, pankou, daxiaoqiu);
+                        });
+                    }
 
-                                           }
-                                       }
-                                   });
+                }
+            }
+        });
 
-                                   //        JButton wbButton = cf.buildJButton("万博", 1030, y0 + 210, 80, 25);
+        //        JButton wbButton = cf.buildJButton("万博", 1030, y0 + 210, 80, 25);
 //        wbButton.addActionListener(new ActionListener(){//添加事件
 //            public void actionPerformed(ActionEvent e){
 //                int selectedRow = table.getSelectedRow();//获得选中行的索引
@@ -131,68 +131,64 @@ public class ConfigPrint {
 //            }
 //        });
 //        panel.add(wbButton);
-                                   JButton betButton = ConfigFrame.buildJButton("Bet", 1115, y0 + 210, 80, 25);
-                                   //添加事件
+        JButton betButton = ConfigFrame.buildJButton("Bet", 1115, y0 + 210, 80, 25);
+        //添加事件
         betButton.addActionListener(e ->
 
-                                   {
-                                       int selectedRow = table.getSelectedRow();//获得选中行的索引
-                                       if (selectedRow != -1)   //是否存在选中行
-                                       {
-                                           //获取选中球队万博数据：
-                                           String name = (String) table.getModel().getValueAt(selectedRow, 0);
-                                           String pankou = (String) table.getModel().getValueAt(selectedRow, 1);
-                                           String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow, 2);
-                                           BetDriver betDriver = (BetDriver) SpringBeanUtil.getBean("betDriver");
-                                           String[] nameArray = name.split("_");
-                                           String name_z = nameArray[0];
-                                           betDriver.focusOn(name_z, pankou, daxiaoqiu);
+        {
+            int selectedRow = table.getSelectedRow();//获得选中行的索引
+            if (selectedRow != -1)   //是否存在选中行
+            {
+                //获取选中球队万博数据：
+                String name = (String) table.getModel().getValueAt(selectedRow, 0);
+                String pankou = (String) table.getModel().getValueAt(selectedRow, 1);
+                String daxiaoqiu = (String) table.getModel().getValueAt(selectedRow, 2);
+                BetDriver betDriver = (BetDriver) SpringBeanUtil.getBean("betDriver");
+                String[] nameArray = name.split("_");
+                String name_z = nameArray[0];
+                betDriver.focusOn(name_z, pankou, daxiaoqiu);
 
-                                       }
-                                   });
+            }
+        });
         panel.add(betButton);
-                                   JScrollPane logTextArea = new JScrollPane(table);
+        JScrollPane logTextArea = new JScrollPane(table);
 
-                                   //添加按钮，绑定事件监听
-                                   JButton clearButton = ConfigFrame.buildJButton("清除", 1030, y0 + 210, 80, 25);
+        //添加按钮，绑定事件监听
+        JButton clearButton = ConfigFrame.buildJButton("清除", 1030, y0 + 210, 80, 25);
 
-                                   addActionListener(clearButton);
+        addActionListener(clearButton);
 
         panel.add(clearButton);
 
-        panel.add(logTextArea,BorderLayout.CENTER);
-        logTextArea.setBounds(20,y0 +30,960,320);
+        panel.add(logTextArea, BorderLayout.CENTER);
+        logTextArea.setBounds(20, y0 + 30, 960, 320);
 
-        try
+        try {
+            Thread t = new Appendered(table);
+            t.start();
 
-                                   {
-                                       Thread t = new Appendered(table);
-                                       t.start();
-
-                                   } catch(
-                                   Exception e)
-
-                                   {
-                                       e.printStackTrace();
-                                   }
-        return panel;
-                               }
-
-                // 为按钮绑定监听
-        private void addActionListener (JButton saveButton){
-            saveButton.addActionListener(
-                    e -> activeEvent());
-
+        } catch (
+                Exception e) {
+            e.printStackTrace();
         }
+        return panel;
+    }
 
-        // save event
-        private void activeEvent () {
-            DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-            int rowCount = tableModel.getRowCount();
-            if (rowCount > 0) {
-                for (int i = rowCount - 1; i >= 0; i--) {
-                    tableModel.removeRow(i);
-                }
+    // 为按钮绑定监听
+    private void addActionListener(JButton saveButton) {
+        saveButton.addActionListener(
+                e -> activeEvent());
+
+    }
+
+    // save event
+    private void activeEvent() {
+        DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+        int rowCount = tableModel.getRowCount();
+        if (rowCount > 0) {
+            for (int i = rowCount - 1; i >= 0; i--) {
+                tableModel.removeRow(i);
             }
         }
     }
+}

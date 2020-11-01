@@ -47,6 +47,7 @@ public class BetYzDeal extends BasicDeal {
 
             } catch (Exception e) {
                 //TODO
+                e.printStackTrace();
             }
         }
     }
