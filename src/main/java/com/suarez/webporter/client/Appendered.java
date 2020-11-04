@@ -74,7 +74,10 @@ public class Appendered extends Thread {
 
 
         while (true) {
+            long startTime = System.currentTimeMillis(); //获取结束时间
+
             try{
+
                 Map<String, Integer> currentKeyList = new HashMap<>();
                 DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
                 int rowCount = tableModel.getRowCount();
@@ -91,9 +94,10 @@ public class Appendered extends Thread {
                     Bet_Wb_Info info = rsMap.get(key);
                     if (currentKeyList.get(key) != null) {
                         //Todo 更新
+                        String betPllx = info.getPllx_bet();
                         int rowIndex = currentKeyList.get(key);
                         tableModel.setValueAt(info.getPk_bet(), rowIndex, 1);
-                        tableModel.setValueAt(info.getPllx_bet(), rowIndex, 2);
+                        tableModel.setValueAt(betPllx, rowIndex, 2);
                         tableModel.setValueAt(info.getPl_bet(), rowIndex, 3);
 
                         tableModel.setValueAt(this.getRandomString((int)(1+Math.random()*(7-1+1))), rowIndex, 4);
@@ -101,6 +105,12 @@ public class Appendered extends Thread {
                         tableModel.setValueAt(info.getPllx_wb(), rowIndex, 7);
                         tableModel.setValueAt(info.getPl_wb(), rowIndex, 8);
                         tableModel.setValueAt(info.getEnrn_money(), rowIndex, 9);
+                        if("大".equals(betPllx)){
+                            tableModel.setValueAt(info.getMoney_bet(), rowIndex, 10);
+                        }else{
+                            tableModel.setValueAt(info.getMoney_wb(), rowIndex, 10);
+
+                        }
                         //table.setModel(tableModel);
                     } else {
                         try {
@@ -111,23 +121,32 @@ public class Appendered extends Thread {
                         music.Start();
                         //TODO 新增
                         Object[] teamObj = new Object[11];
+                        String betPllx = info.getPllx_bet();
+                        String wbPllx = info.getPllx_wb();
+
                         teamObj[0] = info.getTeam_bet();
                         teamObj[1] = info.getPk_bet();
-                        teamObj[2] = info.getPllx_bet();
+                        teamObj[2] = betPllx;
                         teamObj[3] = info.getPl_bet();
                         teamObj[4] = this.getRandomString((int)(1+Math.random()*(7-1+1)));//simpleDateFormat.format(new Date());
                         teamObj[5] = info.getTeam_wb();
                         teamObj[6] = info.getPk_wb();
-                        teamObj[7] = info.getPllx_wb();
+                        teamObj[7] = wbPllx;
                         teamObj[8] = info.getPl_wb();
                         teamObj[9] = info.getEnrn_money();
+                        if("大".equals(betPllx)){
+                            teamObj[10] = info.getMoney_bet();
+                        }else{
+                            teamObj[10] = info.getMoney_wb();
+                        }
+
                         tableModel.addRow(teamObj);
                         //table.setModel(tableModel);
                     }
                     String infoStr = "(BET)场次: " + info.getTeam_bet() + " (BET)盘口:" + info.getPl_bet() + " (BET)赔率:(" + info.getPllx_bet() + ")" + info.getPl_bet() +
                             "(WB)场次: " + info.getTeam_wb() + " (WB)盘口:" + info.getPl_wb() + " (WB)赔率:(" + info.getPllx_wb() + ")" + info.getPl_wb() +
                             " 盈利金额:【" + info.getEnrn_money() + "】";
-                    System.out.println(infoStr);
+//                    System.out.println(infoStr);
                     rsMap.remove(key);
                 }
 
@@ -136,6 +155,9 @@ public class Appendered extends Thread {
 
                 e.printStackTrace();
             }
+            long endTime = System.currentTimeMillis(); //获取结束时间
+
+//            System.out.println("解析全部花费时长：" + (endTime - startTime) + "ms"); //输出程序运行时间
 
         }
     }

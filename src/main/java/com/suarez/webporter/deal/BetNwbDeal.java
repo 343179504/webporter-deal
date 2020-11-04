@@ -103,7 +103,7 @@ public class BetNwbDeal extends BasicDeal {
                     String infoStr = "(BET)场次: " + info.getTeam_bet() + " (BET)盘口:" + info.getPl_bet() + " (BET)赔率:(" + info.getPllx_bet() + ")" + info.getPl_bet() +
                             "(WB)场次: " + info.getTeam_wb() + " (WB)盘口:" + info.getPl_wb() + " (WB)赔率:(" + info.getPllx_wb() + ")" + info.getPl_wb() +
                             " 盈利金额:【" + info.getEnrn_money() + "】";
-                    System.out.println(infoStr);
+//                    System.out.println(infoStr);
                 }
 
                 //bet-小 wb-大

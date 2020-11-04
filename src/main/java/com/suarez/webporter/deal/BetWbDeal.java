@@ -34,7 +34,7 @@ public class BetWbDeal extends BasicDeal {
                             tmp_keyName = wbkey;
                         }
                     }
-                    if (maxSimilarity > 0.3) {
+                    if (maxSimilarity > 0.4) {
                         //分析
                         deal(redisUtil.get(betkey), redisUtil.get(tmp_keyName));
                     } else {

@@ -24,6 +24,7 @@ public class BetYzDeal extends BasicDeal {
     public void begin() {
         while (true) {
             try {
+                long startTime = System.currentTimeMillis(); //获取结束时间
                 Set<String> Wbkeys = redisUtil.keysByPre("yz");
                 Set<String> Betkeys = redisUtil.keysByPre("bet");
                 for (String betkey : Betkeys) {
@@ -36,14 +37,20 @@ public class BetYzDeal extends BasicDeal {
                             tmp_keyName = wbkey;
                         }
                     }
-                    if (maxSimilarity > 0.4) {
+                    if (maxSimilarity >= 0.4) {
                         //分析
+                        if(maxSimilarity<0.4){
+                            //System.out.println("匹配度:"+maxSimilarity+"" +betkey+" vs " +tmp_keyName);
+                        }
                         deal(redisUtil.get(betkey), redisUtil.get(tmp_keyName));
                     } else {
                         //System.out.println(betkey+"未找到匹配的赛事....");
                     }
                     //redisUtil.removeKey(betkey);
                 }
+                long endTime = System.currentTimeMillis(); //获取结束时间
+
+//                System.out.println("解析全部花费时长：" + (endTime - startTime) + "ms"); //输出程序运行时间
 
             } catch (Exception e) {
                 //TODO
@@ -84,7 +91,7 @@ public class BetYzDeal extends BasicDeal {
             String pointWb = dataInfoWb.getPoint();
             DataInfo dataInfoBet = mapBet.get(pointWb);
             if (dataInfoBet != null) {
-                ResultInfo resultInfo_big = WebPhaser.webpoterPhase(dealConfig.getWebpoterPhaseMoney(), keyBet,
+                ResultInfo resultInfo_big = WebPhaser.webpoterPhaseBySmMoney(dealConfig.getWebpoterPhaseSmMoney(), keyBet,
                         Double.valueOf(dataInfoBet.getBig_pl()),
                         Double.valueOf(dataInfoWb.getSm_pl()), pointWb,dealConfig.getWebpoterPhaseEarnMoney());
 

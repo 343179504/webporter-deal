@@ -12,4 +12,8 @@ public class DealConfig {
 
     @Value("${webpoter.phase.earn.money}")
     private int webpoterPhaseEarnMoney;
+
+    @Value("${webpoter.phase.sm.money}")
+    private int webpoterPhaseSmMoney;
+
 }

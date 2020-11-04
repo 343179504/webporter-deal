@@ -24,4 +24,6 @@ public class WebporterConfig {
     @Value("${webdriver.chrome.listen.address.yzty}")
     private String yzty_listenAddress;
 
+    @Value("${webdriver.chrome.listen.address.imty}")
+    private String imty_listenAddress;
 }

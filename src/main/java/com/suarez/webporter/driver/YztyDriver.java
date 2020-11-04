@@ -1,21 +1,31 @@
 package com.suarez.webporter.driver;
 
+import com.suarez.webporter.deal.DealConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static com.suarez.webporter.deal.BetNwbDeal.getDoubleString;
+import static java.lang.Thread.sleep;
 
 @Slf4j
 @Component
 public class YztyDriver {
     @Autowired
     private WebporterConfig webporterConfig;
+    @Autowired
+    protected DealConfig dealConfig;
 
     private WebDriver driver;
     private Actions action;
@@ -26,8 +36,13 @@ public class YztyDriver {
         options.setExperimentalOption("debuggerAddress", webporterConfig.getYzty_listenAddress());
         driver = new ChromeDriver(options);
         action = new Actions(driver);
-        driver.switchTo().frame("sb_frame");
-        driver.switchTo().frame("sportsFrame");
+        //设置隐式等待
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+
+        WebElement frame=driver.findElement(By.xpath( "/html//iframe" ));
+        driver.switchTo().frame(frame);
+        List<WebElement> second=driver.findElements(By.id("sportsFrame"));
+        driver.switchTo().frame(second.get(0));
 
     }
     public void setAttribuate(WebElement eleemnt, String attrName, String attrValue){
@@ -59,13 +74,14 @@ public class YztyDriver {
         }
     }
 
-    public void javaScriptClick(WebElement element) {
+    public boolean javaScriptClick(WebElement element) {
         try{
             if(element.isEnabled()&&element.isDisplayed()){
                 ((JavascriptExecutor) driver).executeScript("arguments[0].click();",element);
+                return true;
             }
             else{
-                System.out.println("页面上的元素无法进行点击操作");
+                return false;
             }
         }catch(StaleElementReferenceException e){
             System.out.println("页面元素没有附加在网页中");
@@ -74,26 +90,133 @@ public class YztyDriver {
         }catch(Exception e){
             System.out.println("无法完成单机动作"+e.getStackTrace());
         }
+        return false;
     }
 
-    private List<WebElement> getTeamList(WebDriver driver) {
-        List<WebElement> teamList = driver.findElements(By.className("matchArea"));
-        return teamList;
+    public void setMoneyValue(WebElement input,String je) {
+        if(je.indexOf(".")>0){
+            je=je.substring(0,je.indexOf("."));
+        }
+        input.clear();
+        input.sendKeys(je);
     }
-    public void focusOn(String name,String pankou,String daxiaoqiu){
+
+    public static String dealPoint(String point) {
+        String realPoint = point;
+        if (point.contains(".25") || point.contains(".75")) {
+            double pointDouble = Double.parseDouble(point);
+            String sm_point = getDoubleString(pointDouble - 0.25);
+            String big_point = getDoubleString(pointDouble + 0.25);
+            realPoint = sm_point + "/" + big_point;
+        }else{
+            double pointDouble = Double.parseDouble(point);
+            realPoint= String.valueOf(pointDouble);
+        }
+        return realPoint;
+    }
+
+    public boolean enterMoney(String pankou,String daxiaoqiu,String je) {
         try{
-            WebElement web = driver.findElement(By.xpath("//span[text()='"+name+"']"));
+            //todo 判断投注框是否打开以及可输入
+            //获取投注框
+            List<WebElement> tzk = driver.findElements(By.xpath("//div[@class='ticket']"));
+
+
+            if(tzk.size()>0){
+                //todo 判断是否可输入
+                //获取投注单
+                List<WebElement> sfky = tzk.get(0).findElements(By.xpath("div[@class='betInfoArea']//div[@class='betDetial']"));
+                    boolean flag=false;
+                    if(sfky.size()>0){
+                        WebElement dxqEle = sfky.get(0).findElement(By.xpath("div[@class='name ']"));
+                        WebElement pkEle = sfky.get(0).findElement(By.xpath("div[@class='oddsDetail']//span[@class='selectorName']"));
+                        if("大".equals(daxiaoqiu)){
+                            String dqdxq=dxqEle.getText();
+                            if(dqdxq.equals("大")){
+                                String pk=dealPoint(pkEle.getText());
+                                pk=pk.replace(".0","");
+                                if(pk.equals(pankou)){
+                                    flag=true;
+                                }
+                            }
+                        }else{
+                            String dqdxq=dxqEle.getText();
+                            if(dqdxq.equals("小")){
+                                String pk=dealPoint(pkEle.getText());
+                                pk=pk.replace(".0","");
+                                if(pk.equals(pankou)){
+                                    flag=true;
+                                }
+                            }
+                        }
+                    }
+                    //判断是否可输入
+                    if(flag){
+                        //todo 输入金额
+                        WebElement input =tzk.get(0).findElement(By.xpath("div[@class='betOtherArea']//input[@id='betSlipStake']"));
+
+                        WebElement zgtzEle = driver.findElement(By.xpath("//div[@id='mainSection']//span[text()='最高投注']/following-sibling::span[1]"));
+                        String vzgtz = zgtzEle.getText().trim();
+                        boolean kfFlag = false;
+                        if(vzgtz.length()>0){
+                            kfFlag=true;
+                        }else{
+                            while(true){
+                                vzgtz = zgtzEle.getText();
+                                if(vzgtz.length()>0){
+                                    kfFlag=true;
+                                    break;
+                                }
+                            }
+                        }
+                        if(kfFlag){
+                            this.setMoneyValue(input,je);
+                        }
+
+//                        input.click();
+
+                    }
+                }
+
+        }catch(StaleElementReferenceException e){
+            System.out.println("页面元素没有附加在网页中");
+        }catch(NoSuchElementException e){
+            System.out.println("在页面中没有找到要操作的元素");
+        }catch(Exception e){
+            System.out.println("无法完成单机动作"+e.getStackTrace());
+        }
+        return false;
+    }
+
+    public void focusOn(String name,String pankou,String daxiaoqiu,String je){
+        try{
+            if("小".equals(daxiaoqiu)){
+                je = String.valueOf(dealConfig.getWebpoterPhaseSmMoney());
+            }
+            WebElement web = null;
+            try{
+                web = driver.findElement(By.xpath("//span[text()='"+name+"']"));
+
+            }catch (Exception e){
+                web = driver.findElement(By.xpath("//span[text()='"+name+" ']"));
+            }
             scrollbar(web);
             try{
                 if ("大".equals(daxiaoqiu)) {
                     WebElement daqiu = driver.findElement(By.xpath("//span[text()='"+name+"']//ancestor::div[@class='multiOdds']/div[3]/div[@class='betArea'][1]//div"));
 
-                    this.javaScriptClick(daqiu);
+                    boolean clickFlag =this.javaScriptClick(daqiu);
+                    if(clickFlag){
+                        this.enterMoney(pankou,daxiaoqiu,je);
+                    }
 
                 } else if ("小".equals(daxiaoqiu)) {
                     WebElement xiaoqiu = driver.findElement(By.xpath("//span[text()='"+name+"']//ancestor::div[@class='multiOdds']/div[3]/div[@class='betArea'][2]//div"));
 
-                    this.javaScriptClick(xiaoqiu);
+                    boolean clickFlag =this.javaScriptClick(xiaoqiu);
+                    if(clickFlag){
+                        this.enterMoney(pankou,daxiaoqiu,je);
+                    }
 
                 }
             }catch(Exception e){
@@ -102,90 +225,6 @@ public class YztyDriver {
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "队伍已不存在.", "提示", JOptionPane.QUESTION_MESSAGE);
         }
-
-
-//        this.javaScriptClick(xiaoqiu);
-
-//        //TODO 选中方法
-//        List<WebElement> teamList = this.getTeamList(driver);
-//        if(teamList.size()==0){
-//            JOptionPane.showMessageDialog(null, "队伍列表为空.", "提示", JOptionPane.INFORMATION_MESSAGE);
-//        }
-//        boolean flag=false;
-//        boolean pk_flag=false;
-//        boolean dxq_flag=false;
-//
-//        for (int i = 0; i < teamList.size(); i++) {
-//            WebElement team = teamList.get(i);
-//            try{
-//                if (null != team) {
-//                    //获取盘口列表
-//                    List<WebElement> teamNameDivList = team.findElements(By.className("multiOdds"));
-//                    WebElement firstPanKouElement = teamNameDivList.get(0);
-//
-//                    for(int j=0;j<teamNameDivList.size();j++){
-//                        WebElement panKouElement = teamNameDivList.get(j);
-//
-//                        //获取第一个盘口，通过第一个盘口获取队名
-//                            List<WebElement> spanElementList = firstPanKouElement.findElements(By.tagName("span"));
-//                            if(spanElementList.size()==0){
-//                                continue;
-//                            }
-//                            //主队名称
-//                            String zhudui = spanElementList.get(0).getAttribute("innerHTML").trim();
-//                            if (name.equals(zhudui)) {
-//                                flag=true;
-//                                List<WebElement> pankouList = panKouElement.findElements(By.className("odds"));
-//                                if (pankouList.size() > 1) {
-//                                    WebElement element = pankouList.get(1);
-//
-//                                    WebElement dqElement = element.findElements(By.className("betArea")).get(0);
-//                                    WebElement xqElement = element.findElements(By.className("betArea")).get(1);
-//                                    List<WebElement> dqSpanList = dqElement.findElements(By.tagName("span"));
-//
-//                                    String dqpkName = dqSpanList.get(0).getAttribute("innerHTML").trim();
-//                                    pankou = pankou.replace(".0","");
-//                                    if (dqpkName.equals(pankou)) {
-//                                        pk_flag=true;
-//                                        if ("大".equals(daxiaoqiu)) {
-//                                            dxq_flag=true;
-//                                            WebElement dqPl = dqElement.findElements(By.tagName("span")).get(1);
-//                                            this.javaScriptClick(dqPl);
-//
-//                                        } else if ("小".equals(daxiaoqiu)) {
-//                                            dxq_flag=true;
-////                                    setAttribuate(xqElement, "style", "background:#efce06;font-size:25px!important;padding:5px;color:red");
-//                                            WebElement xpPl = xqElement.findElements(By.tagName("span")).get(1);
-//                                            this.javaScriptClick(xpPl);
-//
-//                                        }
-//                                        break;
-//                                    }
-//                                }
-//                        }
-//                    }
-//
-//
-//                }
-//            }catch(Exception e){
-//
-//            }
-//
-//        }
-//        if(!flag){
-//            JOptionPane.showMessageDialog(null, "没有找到匹配的队伍.", "提示", JOptionPane.INFORMATION_MESSAGE);
-//        }else{
-//            if(!pk_flag){
-//                JOptionPane.showMessageDialog(null, "没有找到匹配的盘口.", "提示", JOptionPane.INFORMATION_MESSAGE);
-//
-//            }else{
-//
-//                if(!dxq_flag){
-//                    JOptionPane.showMessageDialog(null, "没有找到匹配的大小球.", "提示", JOptionPane.INFORMATION_MESSAGE);
-//
-//                }
-//            }
-//        }
 
 
     }

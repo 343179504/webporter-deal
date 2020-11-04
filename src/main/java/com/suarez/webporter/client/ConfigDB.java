@@ -27,8 +27,8 @@ public class ConfigDB {
     PropertiesUtil propertiesUtil;
 
     private JTextField xqjeTextField;
-    private JTextField xqplTextField;
-    private JTextField dqplTextField;
+    public static JTextField xqplTextField;
+    public static JTextField dqplTextField;
     private JLabel dqje;
     private JLabel sy;
 
