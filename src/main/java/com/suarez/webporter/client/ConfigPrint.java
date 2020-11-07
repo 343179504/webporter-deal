@@ -1,7 +1,9 @@
 package com.suarez.webporter.client;
 
 
+import com.suarez.webporter.deal.BetYzDeal;
 import com.suarez.webporter.driver.*;
+import com.suarez.webporter.util.RedisUtil;
 import com.suarez.webporter.util.SpringBeanUtil;
 import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
@@ -162,15 +164,9 @@ public class ConfigPrint {
 
         panel.add(logTextArea, BorderLayout.CENTER);
         logTextArea.setBounds(20, y0 + 30, 960, 320);
-
-        try {
-            Thread t = new Appendered(table);
-            t.start();
-
-        } catch (
-                Exception e) {
-            e.printStackTrace();
-        }
+        //设置表格组件到解析类中
+        BetYzDeal deal = (BetYzDeal) SpringBeanUtil.getBean("betYzDeal");
+        deal.setAppendered(new Appendered(table));
         return panel;
     }
 
@@ -190,5 +186,9 @@ public class ConfigPrint {
                 tableModel.removeRow(i);
             }
         }
+
+        //清除redis
+        RedisUtil redisUtil = (RedisUtil) SpringBeanUtil.getBean("redisUtil");
+        redisUtil.removeKey("*");
     }
 }
