@@ -189,6 +189,6 @@ public class ConfigPrint {
 
         //清除redis
         RedisUtil redisUtil = (RedisUtil) SpringBeanUtil.getBean("redisUtil");
-        redisUtil.removeKey("*");
+        redisUtil.removeAll();
     }
 }
