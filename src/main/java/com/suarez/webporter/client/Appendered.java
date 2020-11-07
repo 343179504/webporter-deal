@@ -83,7 +83,7 @@ public class Appendered extends Thread {
                 }
             }
 
-            String key = info.getTeam_bet()+info.getPk_bet();
+            String key = info.getTeam_bet() + info.getPllx_bet();
             if (currentKeyList.get(key) != null) {
                 //Todo 更新
                 String betPllx = info.getPllx_bet();
