@@ -148,14 +148,8 @@ public class ConfigPrint {
         panel.add(logTextArea,BorderLayout.CENTER);
         logTextArea.setBounds(20,y0 +30,960,320);
 
-        try
-        {
-           Thread t = new Appendered(table);
-           t.start();
-
-        } catch(Exception e){
-               e.printStackTrace();
-           }
+        BetYzDeal deal = (BetYzDeal) SpringBeanUtil.getBean("betYzDeal");
+        deal.setAppendered(new Appendered(table));
             return panel;
         }
 
