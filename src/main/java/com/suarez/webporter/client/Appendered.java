@@ -18,7 +18,7 @@ public class Appendered extends Thread {
     JTextArea textArea;
     JTable table;
     JScrollPane scroll;
-    Music music;
+    Music music = new Music();
 
     public Appendered(JTable table) {
         this.table = table;

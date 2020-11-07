@@ -1,6 +1,7 @@
 package com.suarez.webporter.client;
 
 
+import com.suarez.webporter.deal.BetYzDeal;
 import com.suarez.webporter.driver.*;
 import com.suarez.webporter.util.RedisUtil;
 import com.suarez.webporter.util.SpringBeanUtil;

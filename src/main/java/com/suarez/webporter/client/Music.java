@@ -1,6 +1,7 @@
 package com.suarez.webporter.client;
 
 import java.io.*;
+import java.util.Objects;
 
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ResourceUtils;
@@ -11,8 +12,8 @@ public class Music {
 
     public void music() throws IOException {
         try {
-            String path = ClassUtils.getDefaultClassLoader().getResource("").getPath();
-            java.io.InputStream in = new java.io.FileInputStream(path+"/9414.wav");
+            java.io.InputStream in = getClass().getClassLoader().getResourceAsStream("9414.wav");
+            assert in != null;
             as = new sun.audio.AudioStream(in);
         } catch (Exception e) {
             e.printStackTrace();

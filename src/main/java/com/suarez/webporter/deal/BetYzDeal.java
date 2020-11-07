@@ -2,6 +2,7 @@ package com.suarez.webporter.deal;
 
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
+import com.suarez.webporter.client.Appendered;
 import com.suarez.webporter.deal.bet_wb.Bet_Wb_Info;
 import com.suarez.webporter.domain.DataInfo;
 import com.suarez.webporter.domain.MatchTeam;
@@ -12,6 +13,7 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Data
 @Component
 public class BetYzDeal extends BasicDeal {
-
+    public Appendered appendered;
     public void begin() {
         while (true) {
             try {
@@ -114,11 +116,12 @@ public class BetYzDeal extends BasicDeal {
                     info.setMoney_wb(resultInfo_big.getSm_money());
                     //设置金额
                     info.setEnrn_money(resultInfo_big.getEnrn_money());
-                    map.put(teamInfoBet.getKeyName() + info.getPllx_bet(), info);
+                    //推送数据
+                    appendered.showRsInfo(info);
                     String infoStr = "(BET)场次: " + info.getTeam_bet() + " (BET)盘口:" + info.getPl_bet() + " (BET)赔率:(" + info.getPllx_bet() + ")" + info.getPl_bet() +
                             "(WB)场次: " + info.getTeam_wb() + " (WB)盘口:" + info.getPl_wb() + " (WB)赔率:(" + info.getPllx_wb() + ")" + info.getPl_wb() +
                             " 盈利金额:【" + info.getEnrn_money() + "】";
-                    System.out.println(infoStr);
+                    //System.out.println(infoStr);
                 }
 
                 //bet-小 wb-大
@@ -144,11 +147,12 @@ public class BetYzDeal extends BasicDeal {
                     info.setMoney_wb(resultInfo_sm.getBig_money());
                     //设置金额
                     info.setEnrn_money(resultInfo_sm.getEnrn_money());
-                    map.put(teamInfoBet.getKeyName() + info.getPllx_bet(), info);
+                    //推送数据
+                    appendered.showRsInfo(info);
                     String infoStr = "(BET)场次: " + info.getTeam_bet() + " (BET)盘口:" + info.getPk_bet() + " (BET)赔率:(" + info.getPllx_bet() + ")" + info.getPl_bet() +
                             "(WB)场次: " + info.getTeam_wb() + " (WB)盘口:" + info.getPl_wb() + " (WB)赔率:(" + info.getPllx_wb() + ")" + info.getPl_wb() +
                             " 盈利金额:【" + info.getEnrn_money() + "】";
-                    System.out.println(infoStr);
+                    //System.out.println(infoStr);
                 }
             }
         }
@@ -179,6 +183,14 @@ public class BetYzDeal extends BasicDeal {
 //            //System.out.println(infoStr);
 //        }
 
+    }
+
+    public Appendered getAppendered() {
+        return appendered;
+    }
+
+    public void setAppendered(Appendered appendered) {
+        this.appendered = appendered;
     }
 
     @Override
