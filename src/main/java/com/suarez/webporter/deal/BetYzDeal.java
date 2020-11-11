@@ -196,7 +196,7 @@ public class BetYzDeal extends BasicDeal {
                     ResultInfo resultInfo_Upper = WebPhaser.webpoterLowerPhase(100, keyBet,
                             Double.valueOf(dataInfoWb.getSm_pl()),
                             Double.valueOf(dataInfoBet.getBig_pl()), dealConfig.getWebpoterPhaseEarnMoney());
-                    //推送Bet 小球数据
+                    //推送Bet 大球数据
                     sendRsInfo_Bet_Upper(teamInfoBet.getKeyName(), teamInfoWb.getKeyName(), dataInfoBet, dataInfoWb, resultInfo_Upper);
                 }
             }
@@ -206,19 +206,19 @@ public class BetYzDeal extends BasicDeal {
             DataInfo dataInfoWbUpper = mapWb.get(upperPoint);
             if (dataInfoWbUpper != null) {
                 //存在上区间，且存在可分析数据
-                boolean isSmBet = Double.parseDouble(pointBet) > Double.parseDouble(lowerPoint);
+                boolean isSmBet = Double.parseDouble(pointBet) > Double.parseDouble(upperPoint);
                 if (isSmBet) {
                     //bet 取小球赔率
-                    ResultInfo resultInfo_upper = WebPhaser.webpoterUpperPhase(100, keyBet,
-                            Double.valueOf(dataInfoWbUpper.getBig_pl()),
-                            Double.valueOf(dataInfoBet.getSm_pl()), dealConfig.getWebpoterPhaseEarnMoney());
+                    ResultInfo resultInfo_upper = WebPhaser.webpoterLowerPhase(100, keyBet,
+                            Double.valueOf(dataInfoBet.getSm_pl()),
+                            Double.valueOf(dataInfoWbUpper.getBig_pl()), dealConfig.getWebpoterPhaseEarnMoney());
                     //推送Bet 小球数据
-                    sendRsInfo_Bet_Upper(teamInfoBet.getKeyName(), teamInfoWb.getKeyName(), dataInfoBet, dataInfoWbUpper, resultInfo_upper);
+                    sendRsInfo_Bet_Lower(teamInfoBet.getKeyName(), teamInfoWb.getKeyName(), dataInfoBet, dataInfoWbUpper, resultInfo_upper);
                 } else {
                     //bet 取大球赔率
-                    ResultInfo resultInfo_upper = WebPhaser.webpoterUpperPhase(100, keyBet,
-                            Double.valueOf(dataInfoBet.getBig_pl()),
-                            Double.valueOf(dataInfoWbUpper.getSm_pl()), dealConfig.getWebpoterPhaseEarnMoney());
+                    ResultInfo resultInfo_upper = WebPhaser.webpoterLowerPhase(100, keyBet,
+                            Double.valueOf(dataInfoWbUpper.getSm_pl()),
+                            Double.valueOf(dataInfoBet.getBig_pl()), dealConfig.getWebpoterPhaseEarnMoney());
                     //推送Bet 大球数据
                     sendRsInfo_Bet_Upper(teamInfoBet.getKeyName(), teamInfoWb.getKeyName(), dataInfoBet, dataInfoWbUpper, resultInfo_upper);
                 }

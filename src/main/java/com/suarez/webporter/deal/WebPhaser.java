@@ -55,8 +55,8 @@ public class WebPhaser {
     public static ResultInfo webpoterLowerPhase(int money, String team, Double sm_pl, Double big_pl, int earnMoney) {
         ResultInfo resultInfo = new ResultInfo();
         double bigMoney = money * sm_pl;
-        double enrn_money = money * sm_pl - bigMoney / 2;
-        if (enrn_money > earnMoney) {
+        double enrn_money = bigMoney * big_pl - money;
+        if (enrn_money > -30) {
             //存在区间收益
             resultInfo.setIsTrue(true);
             resultInfo.setBig_pl(String.valueOf(big_pl));
@@ -122,7 +122,7 @@ public class WebPhaser {
 
 
     public static void main(String[] args) {
-        ResultInfo resultInfo = webpoterPhase(2500, "test", 1.05, 1.06, "0.5", 0);
+        ResultInfo resultInfo = webpoterPhase(100, "test", 5.0, 0.1, "0.1", -1000);
         System.out.println("是否满足收益条件:" + resultInfo.getIsTrue());
         if (resultInfo.getIsTrue()) {
             String rsStr = "场次:" + resultInfo.getTeam() + "盘口:" + resultInfo.getPk() +
