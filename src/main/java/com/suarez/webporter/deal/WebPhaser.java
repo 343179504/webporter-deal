@@ -42,6 +42,70 @@ public class WebPhaser {
         return resultInfo;
     }
 
+    /**
+     * 计算下区间收益
+     *
+     * @param money     小球金额
+     * @param team      比赛场次
+     * @param sm_pl     小球赔率
+     * @param big_pl    大球赔率
+     * @param earnMoney 收益阈值
+     * @return 返回结果
+     */
+    public static ResultInfo webpoterLowerPhase(int money, String team, Double sm_pl, Double big_pl, int earnMoney) {
+        ResultInfo resultInfo = new ResultInfo();
+        double bigMoney = money * sm_pl;
+        double enrn_money = money * sm_pl - bigMoney / 2;
+        if (enrn_money > earnMoney) {
+            //存在区间收益
+            resultInfo.setIsTrue(true);
+            resultInfo.setBig_pl(String.valueOf(big_pl));
+            resultInfo.setSm_pl(String.valueOf(sm_pl));
+            resultInfo.setTeam(team);
+            resultInfo.setBig_money(String.valueOf(Math.round(bigMoney)));
+            resultInfo.setSm_money(String.valueOf(Math.round(money)));
+            resultInfo.setEnrn_money(String.valueOf(Math.round(enrn_money)));
+        } else {
+            resultInfo.setIsTrue(false);
+            resultInfo.setBig_pl(String.valueOf(big_pl));
+            resultInfo.setSm_pl(String.valueOf(sm_pl));
+            resultInfo.setTeam(team);
+        }
+        return resultInfo;
+    }
+
+    /**
+     * 计算区间收益
+     *
+     * @param money     小球金额
+     * @param team      比赛场次
+     * @param sm_pl     小球赔率
+     * @param big_pl    大球赔率
+     * @param earnMoney 收益阈值
+     * @return 返回结果
+     */
+    public static ResultInfo webpoterUpperPhase(int money, String team, Double big_pl, Double sm_pl, int earnMoney) {
+        ResultInfo resultInfo = new ResultInfo();
+        double smMoney = money * big_pl;
+        double enrn_money = money * big_pl - smMoney / 2;
+        if (enrn_money > earnMoney) {
+            //存在区间收益
+            resultInfo.setIsTrue(true);
+            resultInfo.setBig_pl(String.valueOf(big_pl));
+            resultInfo.setSm_pl(String.valueOf(sm_pl));
+            resultInfo.setTeam(team);
+            resultInfo.setBig_money(String.valueOf(Math.round(money)));
+            resultInfo.setSm_money(String.valueOf(smMoney));
+            resultInfo.setEnrn_money(String.valueOf(Math.round(enrn_money)));
+        } else {
+            resultInfo.setIsTrue(false);
+            resultInfo.setBig_pl(String.valueOf(big_pl));
+            resultInfo.setSm_pl(String.valueOf(sm_pl));
+            resultInfo.setTeam(team);
+        }
+        return resultInfo;
+    }
+
     public static void printResultInfo(ResultInfo resultInfo, String big_ly, String sm_ly) {
         //System.out.println("是否满足收益条件:" + resultInfo.getIsTrue());
         if (resultInfo.getIsTrue()) {
@@ -58,7 +122,7 @@ public class WebPhaser {
 
 
     public static void main(String[] args) {
-        ResultInfo resultInfo = webpoterPhase(2500, "test", 1.05, 1.06, "0.5",0);
+        ResultInfo resultInfo = webpoterPhase(2500, "test", 1.05, 1.06, "0.5", 0);
         System.out.println("是否满足收益条件:" + resultInfo.getIsTrue());
         if (resultInfo.getIsTrue()) {
             String rsStr = "场次:" + resultInfo.getTeam() + "盘口:" + resultInfo.getPk() +

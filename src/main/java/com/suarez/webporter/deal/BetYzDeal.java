@@ -7,6 +7,7 @@ import com.suarez.webporter.deal.bet_wb.Bet_Wb_Info;
 import com.suarez.webporter.domain.DataInfo;
 import com.suarez.webporter.domain.MatchTeam;
 import com.suarez.webporter.domain.TeamInfo;
+import com.suarez.webporter.util.PointUtil;
 import com.suarez.webporter.util.RedisUtil;
 import com.suarez.webporter.util.Util;
 import lombok.Data;
@@ -23,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class BetYzDeal extends BasicDeal {
     public Appendered appendered;
+
     public void begin() {
         while (true) {
             try {
@@ -41,6 +43,8 @@ public class BetYzDeal extends BasicDeal {
                     if (maxSimilarity > 0.4) {
                         //分析
                         deal(redisUtil.get(betkey), redisUtil.get(tmp_keyName));
+                        //分析区间
+                        dealArea(redisUtil.get(betkey), redisUtil.get(tmp_keyName));
                     } else {
                         //System.out.println(betkey+"未找到匹配的赛事....");
                     }
@@ -76,7 +80,7 @@ public class BetYzDeal extends BasicDeal {
         matchTeam.setKey(matchKey);
         matchTeam.setTeam_One(teamInfoBet.getKeyName());
         matchTeam.setTeam_Two(teamInfoWb.getKeyName());
-        redisUtil.set(matchKey,new Gson().toJson(matchTeam));
+        redisUtil.set(matchKey, new Gson().toJson(matchTeam));
 
         Map<String, DataInfo> mapBet = Maps.newHashMap();
         for (DataInfo dataInfoBet : infoListBet) {
@@ -89,7 +93,7 @@ public class BetYzDeal extends BasicDeal {
             if (dataInfoBet != null) {
                 ResultInfo resultInfo_big = WebPhaser.webpoterPhase(dealConfig.getWebpoterPhaseMoney(), keyBet,
                         Double.valueOf(dataInfoBet.getBig_pl()),
-                        Double.valueOf(dataInfoWb.getSm_pl()), pointWb,dealConfig.getWebpoterPhaseEarnMoney());
+                        Double.valueOf(dataInfoWb.getSm_pl()), pointWb, dealConfig.getWebpoterPhaseEarnMoney());
 
                 if (resultInfo_big.getIsTrue()) {
                     //推送消息
@@ -120,7 +124,7 @@ public class BetYzDeal extends BasicDeal {
                 //bet-小 wb-大
                 ResultInfo resultInfo_sm = WebPhaser.webpoterPhase(dealConfig.getWebpoterPhaseMoney(), keyWb,
                         Double.valueOf(dataInfoBet.getSm_pl()),
-                        Double.valueOf(dataInfoWb.getBig_pl()), pointWb,dealConfig.getWebpoterPhaseEarnMoney());
+                        Double.valueOf(dataInfoWb.getBig_pl()), pointWb, dealConfig.getWebpoterPhaseEarnMoney());
                 //TODO 推送消息
                 if (resultInfo_sm.getIsTrue()) {
                     //推送消息
@@ -149,34 +153,143 @@ public class BetYzDeal extends BasicDeal {
                 }
             }
         }
-
-        //TODO 测试
-//        for (int i = 0; i < 500; i++) {
-//            Bet_Wb_Info info = new Bet_Wb_Info();
-//            info.setIsTrue(true);
-//            Random random = new Random();
-//            //设置bet信息
-//            info.setTeam_bet("5555" + i);
-//            info.setPk_bet("5555");
-//            info.setPllx_bet("大");
-//            info.setPl_bet(String.valueOf(random.nextInt()));
-//            info.setMoney_bet("5555");
-//            //设置wb信息
-//            info.setTeam_wb("0000");
-//            info.setPk_wb(String.valueOf(random.nextInt(10)));
-//            info.setPllx_wb("小");
-//            info.setPl_wb("0000");
-//            info.setMoney_wb("0000");
-//            //设置金额
-//            info.setEnrn_money("0000");
-//            map.put(info.getTeam_bet() + info.getPllx_bet(), info);
-//            String infoStr = "(BET)场次: " + info.getTeam_bet() + " (BET)盘口:" + info.getPl_bet() + " (BET)赔率:(" + info.getPllx_bet() + ")" + info.getPl_bet() +
-//                    "(WB)场次: " + info.getTeam_wb() + " (WB)盘口:" + info.getPl_wb() + " (WB)赔率:(" + info.getPllx_wb() + ")" + info.getPl_wb() +
-//                    " 盈利金额:【" + info.getEnrn_money() + "】";
-//            //System.out.println(infoStr);
-//        }
-
     }
+
+    /**
+     * 计算分析区间
+     *
+     * @param betStr bet
+     * @param wbStr  wb
+     */
+    private void dealArea(String betStr, String wbStr) {
+        Gson gson = new Gson();
+        TeamInfo teamInfoBet = gson.fromJson(betStr, TeamInfo.class);
+        String keyBet = teamInfoBet.getKeyName();
+        List<DataInfo> infoListBet = teamInfoBet.getInfo();
+
+        TeamInfo teamInfoWb = gson.fromJson(wbStr, TeamInfo.class);
+        List<DataInfo> infoListWb = teamInfoWb.getInfo();
+
+        Map<String, DataInfo> mapWb = Maps.newHashMap();
+        for (DataInfo dataInfoWb : infoListWb) {
+            //处理盘口
+            String key = PointUtil.changePoint(dataInfoWb.getPoint());
+            mapWb.put(key, dataInfoWb);
+        }
+        for (DataInfo dataInfoBet : infoListBet) {
+            String pointBet = PointUtil.changePoint(dataInfoBet.getPoint());
+            //获取下区间点
+            String lowerPoint = PointUtil.getPointLower(pointBet);
+            DataInfo dataInfoWb = mapWb.get(lowerPoint);
+            if (dataInfoWb != null) {
+                //存在下区间，且存在可分析数据
+                boolean isSmBet = Double.parseDouble(pointBet) > Double.parseDouble(lowerPoint);
+                if (isSmBet) {
+                    //bet 取小球赔率
+                    ResultInfo resultInfo_lower = WebPhaser.webpoterLowerPhase(100, keyBet,
+                            Double.valueOf(dataInfoBet.getSm_pl()),
+                            Double.valueOf(dataInfoWb.getBig_pl()), dealConfig.getWebpoterPhaseEarnMoney());
+                    //推送Bet 小球数据
+                    sendRsInfo_Bet_Lower(teamInfoBet.getKeyName(), teamInfoWb.getKeyName(), dataInfoBet, dataInfoWb, resultInfo_lower);
+                } else {
+                    //bet取大球赔率
+                    ResultInfo resultInfo_Upper = WebPhaser.webpoterLowerPhase(100, keyBet,
+                            Double.valueOf(dataInfoWb.getSm_pl()),
+                            Double.valueOf(dataInfoBet.getBig_pl()), dealConfig.getWebpoterPhaseEarnMoney());
+                    //推送Bet 小球数据
+                    sendRsInfo_Bet_Upper(teamInfoBet.getKeyName(), teamInfoWb.getKeyName(), dataInfoBet, dataInfoWb, resultInfo_Upper);
+                }
+            }
+
+            //获取上区间点
+            String upperPoint = PointUtil.getPointUpper(pointBet);
+            DataInfo dataInfoWbUpper = mapWb.get(upperPoint);
+            if (dataInfoWbUpper != null) {
+                //存在上区间，且存在可分析数据
+                boolean isSmBet = Double.parseDouble(pointBet) > Double.parseDouble(lowerPoint);
+                if (isSmBet) {
+                    //bet 取小球赔率
+                    ResultInfo resultInfo_upper = WebPhaser.webpoterUpperPhase(100, keyBet,
+                            Double.valueOf(dataInfoWbUpper.getBig_pl()),
+                            Double.valueOf(dataInfoBet.getSm_pl()), dealConfig.getWebpoterPhaseEarnMoney());
+                    //推送Bet 小球数据
+                    sendRsInfo_Bet_Upper(teamInfoBet.getKeyName(), teamInfoWb.getKeyName(), dataInfoBet, dataInfoWbUpper, resultInfo_upper);
+                } else {
+                    //bet 取大球赔率
+                    ResultInfo resultInfo_upper = WebPhaser.webpoterUpperPhase(100, keyBet,
+                            Double.valueOf(dataInfoBet.getBig_pl()),
+                            Double.valueOf(dataInfoWbUpper.getSm_pl()), dealConfig.getWebpoterPhaseEarnMoney());
+                    //推送Bet 大球数据
+                    sendRsInfo_Bet_Upper(teamInfoBet.getKeyName(), teamInfoWb.getKeyName(), dataInfoBet, dataInfoWbUpper, resultInfo_upper);
+                }
+            }
+        }
+    }
+
+    /**
+     * 推送bet小球信息
+     *
+     * @param teamBet     比赛场次-bet
+     * @param teamWb      比赛场次-wb
+     * @param dataInfoBet 盘口信息-bet
+     * @param dataInfoWb  盘口信息-wb
+     * @param resultInfo  分析结果
+     */
+    private void sendRsInfo_Bet_Lower(String teamBet, String teamWb, DataInfo dataInfoBet, DataInfo dataInfoWb, ResultInfo resultInfo) {
+        if (resultInfo.getIsTrue()) {
+            Bet_Wb_Info info = new Bet_Wb_Info();
+            info.setIsTrue(true);
+            //设置bet信息
+            info.setTeam_bet(teamBet);
+            info.setPk_bet(dataInfoBet.getPoint());
+            info.setPllx_bet("小");
+            info.setPl_bet(dataInfoBet.getSm_pl());
+            info.setMoney_bet(resultInfo.getSm_money());
+            //设置wb信息
+            info.setTeam_wb(teamWb);
+            info.setPk_wb(dataInfoWb.getPoint());
+            info.setPllx_wb("大");
+            info.setPl_wb(dataInfoWb.getBig_pl());
+            info.setMoney_wb(resultInfo.getBig_money());
+            //设置金额
+            info.setEnrn_money(resultInfo.getEnrn_money());
+            //推送数据
+            appendered.showRsInfo(info);
+        }
+    }
+
+    /**
+     * 推送bet大球信息
+     *
+     * @param teamBet     比赛场次-bet
+     * @param teamWb      比赛场次-wb
+     * @param dataInfoBet 盘口信息-bet
+     * @param dataInfoWb  盘口信息-wb
+     * @param resultInfo  分析结果
+     */
+    private void sendRsInfo_Bet_Upper(String teamBet, String teamWb, DataInfo dataInfoBet, DataInfo dataInfoWb, ResultInfo resultInfo) {
+        if (resultInfo.getIsTrue()) {
+            Bet_Wb_Info info = new Bet_Wb_Info();
+            info.setIsTrue(true);
+            //设置bet信息
+            info.setTeam_bet(teamBet);
+            info.setPk_bet(dataInfoBet.getPoint());
+            info.setPllx_bet("大");
+            info.setPl_bet(dataInfoBet.getBig_pl());
+            info.setMoney_bet(resultInfo.getBig_money());
+            //设置wb信息
+            info.setTeam_wb(teamWb);
+            info.setPk_wb(dataInfoWb.getPoint());
+            info.setPllx_wb("小");
+            info.setPl_wb(dataInfoWb.getSm_pl());
+            info.setMoney_wb(resultInfo.getSm_money());
+            //设置金额
+            info.setEnrn_money(resultInfo.getEnrn_money());
+            //推送数据
+            appendered.showRsInfo(info);
+        }
+    }
+
 
     public Appendered getAppendered() {
         return appendered;

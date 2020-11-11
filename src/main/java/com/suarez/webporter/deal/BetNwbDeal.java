@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.suarez.webporter.deal.bet_wb.Bet_Wb_Info;
 import com.suarez.webporter.domain.DataInfo;
 import com.suarez.webporter.domain.TeamInfo;
+import com.suarez.webporter.util.PointUtil;
 import com.suarez.webporter.util.RedisUtil;
 import com.suarez.webporter.util.Util;
 import lombok.Data;
@@ -75,7 +76,7 @@ public class BetNwbDeal extends BasicDeal {
         for (DataInfo dataInfoNwb : infoListNwb) {
             String pointNwb = dataInfoNwb.getPoint();
             //处理特殊point
-            pointNwb = dealPoint(pointNwb);
+            pointNwb = PointUtil.dealPoint(pointNwb);
             DataInfo dataInfoBet = mapBet.get(pointNwb);
             if (dataInfoBet != null) {
                 ResultInfo resultInfo_big = WebPhaser.webpoterPhase(dealConfig.getWebpoterPhaseMoney(), keyBet,
@@ -164,33 +165,6 @@ public class BetNwbDeal extends BasicDeal {
 //            //System.out.println(infoStr);
 //        }
 
-    }
-
-    public static String dealPoint(String point) {
-        String realPoint = point;
-        if (point.contains(".25") || point.contains(".75")) {
-            double pointDouble = Double.parseDouble(point);
-            String sm_point = getDoubleString(pointDouble - 0.25);
-            String big_point = getDoubleString(pointDouble + 0.25);
-            realPoint = sm_point + "/" + big_point;
-        }
-        return realPoint;
-    }
-
-
-    /*
-     * 如果是小数，保留两位，非小数，保留整数
-     * @param number
-     */
-    public static String getDoubleString(double number) {
-        String numberStr;
-        if (((int) number * 1000) == (int) (number * 1000)) {
-            //如果是一个整数
-            numberStr = String.valueOf((int) number);
-        } else {
-            numberStr = String.valueOf(number);
-        }
-        return numberStr;
     }
 
     @Override
