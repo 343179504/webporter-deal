@@ -56,7 +56,7 @@ public class WebPhaser {
         ResultInfo resultInfo = new ResultInfo();
         double bigMoney = money * sm_pl;
         double enrn_money = bigMoney * big_pl - money;
-        if (enrn_money > -30) {
+        if (enrn_money > -29) {
             //存在区间收益
             resultInfo.setIsTrue(true);
             resultInfo.setBig_pl(String.valueOf(big_pl));

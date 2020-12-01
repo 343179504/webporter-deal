@@ -183,22 +183,12 @@ public class BetYzDeal extends BasicDeal {
             DataInfo dataInfoWb = mapWb.get(lowerPoint);
             if (dataInfoWb != null) {
                 //存在下区间，且存在可分析数据
-                boolean isSmBet = Double.parseDouble(pointBet) > Double.parseDouble(lowerPoint);
-                if (isSmBet) {
-                    //bet 取小球赔率
-                    ResultInfo resultInfo_lower = WebPhaser.webpoterLowerPhase(100, keyBet,
-                            Double.valueOf(dataInfoBet.getSm_pl()),
-                            Double.valueOf(dataInfoWb.getBig_pl()), dealConfig.getWebpoterPhaseEarnMoney());
-                    //推送Bet 小球数据
-                    sendRsInfo_Bet_Lower(teamInfoBet.getKeyName(), teamInfoWb.getKeyName(), dataInfoBet, dataInfoWb, resultInfo_lower);
-                } else {
-                    //bet取大球赔率
-                    ResultInfo resultInfo_Upper = WebPhaser.webpoterLowerPhase(100, keyBet,
-                            Double.valueOf(dataInfoWb.getSm_pl()),
-                            Double.valueOf(dataInfoBet.getBig_pl()), dealConfig.getWebpoterPhaseEarnMoney());
-                    //推送Bet 大球数据
-                    sendRsInfo_Bet_Upper(teamInfoBet.getKeyName(), teamInfoWb.getKeyName(), dataInfoBet, dataInfoWb, resultInfo_Upper);
-                }
+                //bet 取小球赔率
+                ResultInfo resultInfo_lower = WebPhaser.webpoterLowerPhase(100, keyBet,
+                        Double.valueOf(dataInfoBet.getSm_pl()),
+                        Double.valueOf(dataInfoWb.getBig_pl()), dealConfig.getWebpoterPhaseEarnMoney());
+                //推送Bet 小球数据
+                sendRsInfo_Bet_Lower(teamInfoBet.getKeyName(), teamInfoWb.getKeyName(), dataInfoBet, dataInfoWb, resultInfo_lower);
             }
 
             //获取上区间点
@@ -206,22 +196,12 @@ public class BetYzDeal extends BasicDeal {
             DataInfo dataInfoWbUpper = mapWb.get(upperPoint);
             if (dataInfoWbUpper != null) {
                 //存在上区间，且存在可分析数据
-                boolean isSmBet = Double.parseDouble(pointBet) > Double.parseDouble(upperPoint);
-                if (isSmBet) {
-                    //bet 取小球赔率
-                    ResultInfo resultInfo_upper = WebPhaser.webpoterLowerPhase(100, keyBet,
-                            Double.valueOf(dataInfoBet.getSm_pl()),
-                            Double.valueOf(dataInfoWbUpper.getBig_pl()), dealConfig.getWebpoterPhaseEarnMoney());
-                    //推送Bet 小球数据
-                    sendRsInfo_Bet_Lower(teamInfoBet.getKeyName(), teamInfoWb.getKeyName(), dataInfoBet, dataInfoWbUpper, resultInfo_upper);
-                } else {
-                    //bet 取大球赔率
-                    ResultInfo resultInfo_upper = WebPhaser.webpoterLowerPhase(100, keyBet,
-                            Double.valueOf(dataInfoWbUpper.getSm_pl()),
-                            Double.valueOf(dataInfoBet.getBig_pl()), dealConfig.getWebpoterPhaseEarnMoney());
-                    //推送Bet 大球数据
-                    sendRsInfo_Bet_Upper(teamInfoBet.getKeyName(), teamInfoWb.getKeyName(), dataInfoBet, dataInfoWbUpper, resultInfo_upper);
-                }
+                //bet 取大球赔率
+                ResultInfo resultInfo_upper = WebPhaser.webpoterLowerPhase(100, keyBet,
+                        Double.valueOf(dataInfoWbUpper.getSm_pl()),
+                        Double.valueOf(dataInfoBet.getBig_pl()), dealConfig.getWebpoterPhaseEarnMoney());
+                //推送Bet 大球数据
+                sendRsInfo_Bet_Upper(teamInfoBet.getKeyName(), teamInfoWb.getKeyName(), dataInfoBet, dataInfoWbUpper, resultInfo_upper);
             }
         }
     }

@@ -28,12 +28,7 @@ public class PointUtil {
      * @return 下区间点
      */
     public static String getPointLower(String point) {
-        if (point.contains(".25")) {
-            return getDoubleString(Double.parseDouble(point) + 0.25);
-        } else if (point.contains(".5")) {
-            return getDoubleString(Double.parseDouble(point) - 0.25);
-        }
-        return "null";
+        return getDoubleString(Double.parseDouble(point) - 0.25);
     }
 
     /**
@@ -43,12 +38,7 @@ public class PointUtil {
      * @return 下区间点
      */
     public static String getPointUpper(String point) {
-        if (point.contains(".5")) {
-            return getDoubleString(Double.parseDouble(point) + 0.25);
-        }else if (point.contains(".75")) {
-            return getDoubleString(Double.parseDouble(point) - 0.25);
-        }
-        return "null";
+        return getDoubleString(Double.parseDouble(point) + 0.25);
     }
 
     /*
